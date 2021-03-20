@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Linux 实用小代码，自定义一个系统调用 | AckDo.com</title>
+  <meta name="description" content="Linux 是一个开源的系统，我们可以根据需要，添加一个自定义的系统调用，完成所需要的动作。 1 环境 Red Hat Enterprise Linux release 7.6 linux-3.10.0-957.5.1.el7.x86_64  2 具体步骤2.1 将需要添加的系统调用号与调用函数的对应到文件 “syscall_64.tbl” 路径1linux-3.10.0-957.5.1.el7.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 实用小代码，自定义一个系统调用">
+<meta property="og:url" content="http://www.ackdo.com/2021/03/20/code_ackdo_customized_syscall/index.html">
+<meta property="og:site_name" content="AckDo">
+<meta property="og:description" content="Linux 是一个开源的系统，我们可以根据需要，添加一个自定义的系统调用，完成所需要的动作。 1 环境 Red Hat Enterprise Linux release 7.6 linux-3.10.0-957.5.1.el7.x86_64  2 具体步骤2.1 将需要添加的系统调用号与调用函数的对应到文件 “syscall_64.tbl” 路径1linux-3.10.0-957.5.1.el7.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-19T16:00:00.000Z">
+<meta property="article:author" content="Sam Lee">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.ackdo.com/2021/03/20/code_ackdo_customized_syscall/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="AckDo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img src="/images/avatar.png" width="400" height="400">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">AckDo by Sam Lee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="站内搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">站点首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档文档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">文档分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">常用链接</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">共享白板</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告牌</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 欢迎来到 AckDo ，Ack & Do it right now! 只要开始踏实地去做，就永远不会太迟。 我是一个Linux 拥趸：D。 目前正在用的Linux 版本是 Red Hat Enterprise Linux release 8.3 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">文档分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F-%E5%AE%B9%E5%99%A8-%E5%8E%9F%E5%88%9B/">云原生 容器(原创)</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%86%85%E6%A0%B8%E6%96%87%E6%A1%A3/">内核文档</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C-OVS-%E5%8E%9F%E5%88%9B/">网络 OVS(原创)</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_FW_progress_sensor/" class="title">IPMI 实用小代码，如何给“FW Progress sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_gracefull_shutdown/" class="title">IPMI 实用小代码，捕获对应BMC raw命令来实现对上层系统控制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_boot_initial_sensor/" class="title">IPMI 实用小代码，如何给“Boot Initiated sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_boot_error_sensor/" class="title">IPMI 实用小代码，如何给“Boot error sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_os_boot_sensor/" class="title">IPMI 实用小代码，如何给“OS Boot sensor”触发一个“OS Boot event”</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">1 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">2 具体步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%B0%86%E9%9C%80%E8%A6%81%E6%B7%BB%E5%8A%A0%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7%E4%B8%8E%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%E7%9A%84%E5%AF%B9%E5%BA%94%E5%88%B0%E6%96%87%E4%BB%B6-%E2%80%9Csyscall-64-tbl%E2%80%9D"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 将需要添加的系统调用号与调用函数的对应到文件 “syscall_64.tbl”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%B0%86%E6%88%91%E4%BB%AC%E5%85%B7%E4%BD%93%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%88%B0%E6%96%87%E4%BB%B6-%E2%80%9Csyscalls-h%E2%80%9D"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 将我们具体要实现的系统调用到文件 “syscalls.h”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E5%B0%86%E6%88%91%E4%BB%AC%E5%85%B7%E4%BD%93%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7%E5%88%B0%E6%96%87%E4%BB%B6-%E2%80%9Cunistd-h%E2%80%9D"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 将我们具体要实现的系统调用号到文件 “unistd.h”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E5%B0%86%E6%88%91%E4%BB%AC%E5%85%B7%E4%BD%93%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E5%88%B0%E6%96%87%E4%BB%B6-%E2%80%9Csys-c%E2%80%9D"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 将我们具体要实现的系统调用的具体实现到文件 “sys.c”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E9%87%8D%E6%96%B0%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%94%E5%8A%A0%E8%BD%BD%E6%88%91%E4%BB%AC%E7%9A%84%E5%86%85%E6%A0%B8"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 重新编译并且加载我们的内核</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%BA%94%E7%94%A8%E6%9D%A5%E8%B0%83%E7%94%A8%E6%88%91%E4%BB%AC%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 写一个简单的应用来调用我们的系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%94%E6%89%A7%E8%A1%8C%E6%88%91%E4%BB%AC%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">2.7.</span> <span class="toc-text">2.7 编译并且执行我们的应用</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-code_ackdo_customized_syscall" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux 实用小代码，自定义一个系统调用
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/03/20/code_ackdo_customized_syscall/" class="article-date">
+	 published: <time datetime="2021-03-19T16:00:00.000Z" itemprop="datePublished">2021-03-20</time>
+	</a>
+</span>
+
+        
+	<a href="/2021/03/20/code_ackdo_customized_syscall/" class="article-date">
+	   updated: <time datetime="2021-03-19T16:00:00.000Z" itemprop="dateUpdated">2021-03-20</time>
+	</a>
+
+
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a>
+  </span>
+
+        
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill"></i>
+	    <!--<span id="busuanzi_container_page_pv" style="display:inline;">-->
+			<span id="busuanzi_value_page_pv" style="display:inline;"></span>
+		<!--</span>-->
+	</span>
+
+
+
+        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/20/code_ackdo_customized_syscall/#comments" class="article-comment-link">评论</a></span> -->
+        
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Linux 是一个开源的系统，我们可以根据需要，添加一个自定义的系统调用，完成所需要的动作。</p>
+<h1 id="1-环境"><a href="#1-环境" class="headerlink" title="1 环境"></a>1 环境</h1><ul>
+<li>Red Hat Enterprise Linux release 7.6</li>
+<li>linux-3.10.0-957.5.1.el7.x86_64</li>
+</ul>
+<h1 id="2-具体步骤"><a href="#2-具体步骤" class="headerlink" title="2 具体步骤"></a>2 具体步骤</h1><h2 id="2-1-将需要添加的系统调用号与调用函数的对应到文件-“syscall-64-tbl”"><a href="#2-1-将需要添加的系统调用号与调用函数的对应到文件-“syscall-64-tbl”" class="headerlink" title="2.1 将需要添加的系统调用号与调用函数的对应到文件 “syscall_64.tbl”"></a>2.1 将需要添加的系统调用号与调用函数的对应到文件 “syscall_64.tbl”</h2><ul>
+<li>路径<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linux-3.10.0-957.5.1.el7.x86_64&#x2F;arch&#x2F;x86&#x2F;syscalls&#x2F;syscall_64.tbl</span><br></pre></td></tr></table></figure></li>
+<li>格式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Format: &lt;number&gt; &lt;abi&gt; &lt;name&gt; &lt;entry point&gt;</span><br></pre></td></tr></table></figure></li>
+<li>添加的示例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2000 common Sam sysSam</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-将我们具体要实现的系统调用到文件-“syscalls-h”"><a href="#2-2-将我们具体要实现的系统调用到文件-“syscalls-h”" class="headerlink" title="2.2 将我们具体要实现的系统调用到文件 “syscalls.h”"></a>2.2 将我们具体要实现的系统调用到文件 “syscalls.h”</h2></li>
+<li>路径<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Path: linux-3.10.0-957.5.1.el7.x86_64&#x2F;include&#x2F;linux&#x2F;syscalls.h</span><br></pre></td></tr></table></figure></li>
+<li>添加的示例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage long sysSam(int count);</span><br></pre></td></tr></table></figure>
+<h2 id="2-3-将我们具体要实现的系统调用号到文件-“unistd-h”"><a href="#2-3-将我们具体要实现的系统调用号到文件-“unistd-h”" class="headerlink" title="2.3 将我们具体要实现的系统调用号到文件 “unistd.h”"></a>2.3 将我们具体要实现的系统调用号到文件 “unistd.h”</h2></li>
+<li>路径<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Path: linux-3.10.0-957.5.1.el7.x86_64&#x2F;include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h</span><br></pre></td></tr></table></figure></li>
+<li>添加的示例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define __NR__sysSam 2000</span><br><span class="line">__SYSCALL(__NR__sysSam, sysSam)</span><br></pre></td></tr></table></figure>
+<h2 id="2-4-将我们具体要实现的系统调用的具体实现到文件-“sys-c”"><a href="#2-4-将我们具体要实现的系统调用的具体实现到文件-“sys-c”" class="headerlink" title="2.4 将我们具体要实现的系统调用的具体实现到文件 “sys.c”"></a>2.4 将我们具体要实现的系统调用的具体实现到文件 “sys.c”</h2></li>
+<li>路径<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Path: linux-3.10.0-957.5.1.el7.x86_64&#x2F;kernel&#x2F;sys.c</span><br></pre></td></tr></table></figure></li>
+<li>添加的示例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage long sysSam(int count)&#123;</span><br><span class="line">       int i;</span><br><span class="line">       for (i&#x3D;0; i&lt;count; i++)&#123;</span><br><span class="line">               printk(KERN_ALERT &quot; ## Sam system call test %d \n&quot;, i);</span><br><span class="line">       &#125;</span><br><span class="line">       return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-5-重新编译并且加载我们的内核"><a href="#2-5-重新编译并且加载我们的内核" class="headerlink" title="2.5 重新编译并且加载我们的内核"></a>2.5 重新编译并且加载我们的内核</h2></li>
+<li>就是常规的make bzImage 在reboot 就好了<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3.10.0.Sam #3 SMP Sat Mar 20 09:19:47 CST 2019x86_64 x86_64 x86_64 GNU&#x2F;Linux</span><br></pre></td></tr></table></figure>
+<h2 id="2-6-写一个简单的应用来调用我们的系统调用"><a href="#2-6-写一个简单的应用来调用我们的系统调用" class="headerlink" title="2.6 写一个简单的应用来调用我们的系统调用"></a>2.6 写一个简单的应用来调用我们的系统调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">int main(int argc, char **argv)&#123;</span><br><span class="line">       int ret&#x3D;1;</span><br><span class="line">       &#x2F;* use system call number directly and pass parameter 3*&#x2F;</span><br><span class="line">       ret&#x3D;syscall(2000,3);</span><br><span class="line">       printf(&quot;ret &#x3D; %d\n&quot;, ret);</span><br><span class="line">       return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-7-编译并且执行我们的应用"><a href="#2-7-编译并且执行我们的应用" class="headerlink" title="2.7 编译并且执行我们的应用"></a>2.7 编译并且执行我们的应用</h2></li>
+<li>编译<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># gcc -g samSystemCallTest.c -osamSystemCallTest</span><br></pre></td></tr></table></figure></li>
+<li>执行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># .&#x2F;samSystemCallTest</span><br></pre></td></tr></table></figure></li>
+<li>输出<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ 107.667182]  ## Sam system call test 0</span><br><span class="line">[ 107.667241]  ## Sam system call test 1</span><br><span class="line">[ 107.667277]  ## Sam system call test 2</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.ackdo.com/2021/03/20/code_ackdo_customized_syscall/" title="Linux 实用小代码，自定义一个系统调用" target="_blank" rel="external">http://www.ackdo.com/2021/03/20/code_ackdo_customized_syscall/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">AckDo by Sam Lee</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/" title="Linux小玩意之 在RHEL8.3 上搭建Pycharm ， Qt IDE开发环境"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/03/13/linux_ackdo_pack_pycode_to_elf/" title="Linux 如何打包 python 脚本为elf可执行文件"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+    <div class="container" align="left">
+    <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+      <img src="/images/wechatp.png" itemprop="contentUrl">
+      <span>欢迎关注公众号</span>
+    </div>
+    </div>
+</nav>
+
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>您能有收获就是我们最大的动力</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码捐赠</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码捐赠</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+	<a target="_blank" rel="noopener" href="https://beian.miit.gov.cn" text-align: center >粤ICP备2021024811号</a>
+        </div>
+<!--    
+    <div>
+     <img src="/images/logo.png" width="140" height="140">
+    </div>
+-->
+    </div>
+
+
+        <!-- 不蒜子统计    //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js -->
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <!--<span id="busuanzi_container_site_pv" style="display:inline;">-->本站总访问量<span id="busuanzi_value_site_pv" style="display:inline;></span>次</span>
+        <span class="post-meta-divider">|</span>
+  
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

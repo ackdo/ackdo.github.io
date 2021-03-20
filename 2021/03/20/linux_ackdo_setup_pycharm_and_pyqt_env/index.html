@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Linux小玩意之 在RHEL8.3 上搭建Pycharm ， Qt IDE开发环境 | AckDo.com</title>
+  <meta name="description" content="Pycharm， Qt 的简介 PyCharm 是一个用于计算机编程的集成开发环境(IDE)，主要用于Python语言开发，由捷克公司JetBrains开发，提供代码分析、图形化调试器，集成测试器、集成版本控制系统，并支持使用Django进行网页开发。简介来自 wiki-pycharm Qt 是一个跨平台的C++应用程序开发框架。广泛用于开发GUI程序，这种情况下又被称为部件工具箱。也可用于开发非">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux小玩意之 在RHEL8.3 上搭建Pycharm ， Qt IDE开发环境">
+<meta property="og:url" content="http://www.ackdo.com/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/index.html">
+<meta property="og:site_name" content="AckDo">
+<meta property="og:description" content="Pycharm， Qt 的简介 PyCharm 是一个用于计算机编程的集成开发环境(IDE)，主要用于Python语言开发，由捷克公司JetBrains开发，提供代码分析、图形化调试器，集成测试器、集成版本控制系统，并支持使用Django进行网页开发。简介来自 wiki-pycharm Qt 是一个跨平台的C++应用程序开发框架。广泛用于开发GUI程序，这种情况下又被称为部件工具箱。也可用于开发非">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_welcome1.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_licenseaccept.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_setupQT_start.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_install_folder.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_license_aggre.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_ready.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_installing.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_finished1.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_finished.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_createExternal1.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_createQTD.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_pyuic_ok.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_createfinished.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_calltools.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_qtdesign.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_pyuic.png">
+<meta property="og:image" content="http://www.ackdo.com/images/setup_pycharm_container.png">
+<meta property="article:published_time" content="2021-03-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-19T16:00:00.000Z">
+<meta property="article:author" content="Sam Lee">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.ackdo.com/images/setup_pycharm_welcome1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.ackdo.com/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="AckDo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img src="/images/avatar.png" width="400" height="400">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">AckDo by Sam Lee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="站内搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">站点首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档文档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">文档分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">常用链接</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">共享白板</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告牌</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 欢迎来到 AckDo ，Ack & Do it right now! 只要开始踏实地去做，就永远不会太迟。 我是一个Linux 拥趸：D。 目前正在用的Linux 版本是 Red Hat Enterprise Linux release 8.3 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">文档分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F-%E5%AE%B9%E5%99%A8-%E5%8E%9F%E5%88%9B/">云原生 容器(原创)</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%86%85%E6%A0%B8%E6%96%87%E6%A1%A3/">内核文档</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C-OVS-%E5%8E%9F%E5%88%9B/">网络 OVS(原创)</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_FW_progress_sensor/" class="title">IPMI 实用小代码，如何给“FW Progress sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_gracefull_shutdown/" class="title">IPMI 实用小代码，捕获对应BMC raw命令来实现对上层系统控制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_boot_initial_sensor/" class="title">IPMI 实用小代码，如何给“Boot Initiated sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_boot_error_sensor/" class="title">IPMI 实用小代码，如何给“Boot error sensor”触发一个事件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/21/ipmi_ackdo_os_boot_sensor/" class="title">IPMI 实用小代码，如何给“OS Boot sensor”触发一个“OS Boot event”</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-20T16:00:00.000Z" itemprop="datePublished">2021-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Pycharm%EF%BC%8C-Qt-%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Pycharm， Qt 的简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">1. 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85-QT"><span class="toc-number">3.</span> <span class="toc-text">2. 安装 QT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E4%B8%8B%E8%BD%BD%E5%AE%8C%E6%AF%95%EF%BC%8C%E6%B7%BB%E5%8A%A0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90"><span class="toc-number">4.</span> <span class="toc-text">3. 下载完毕，添加可执行权限</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E8%BF%90%E8%A1%8C-qt-unified-linux-x64-4-0-1-1-online-run-%E5%90%AF%E5%8A%A8%E5%AE%89%E8%A3%85"><span class="toc-number">5.</span> <span class="toc-text">4. 运行 qt-unified-linux-x64-4.0.1-1-online.run 启动安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E5%90%AF%E5%8A%A8%E7%95%8C%E9%9D%A2%EF%BC%8C%E9%9C%80%E8%A6%81%E8%BE%93%E5%85%A5%E9%82%AE%E7%AE%B1%EF%BC%8C%E8%B4%A6%E5%8F%B7%EF%BC%88%E6%B2%A1%E6%9C%89%E7%9A%84%E5%B0%B1%E6%B3%A8%E5%86%8C%E4%B8%80%E4%B8%AA%E5%A5%BD%E4%BA%86%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 启动界面，需要输入邮箱，账号（没有的就注册一个好了）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E7%82%B9%E5%87%BBNext-%E9%80%89%E6%8B%A9-Open-Source-Obligations"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 点击Next 选择 Open Source Obligations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E7%82%B9%E5%87%BBNext-%E5%BC%80%E5%A7%8B%E5%BC%80%E8%A3%85Qt"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 点击Next 开始开装Qt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E7%82%B9%E5%87%BBNext-%E9%80%89%E6%8B%A9%E9%9C%80%E8%A6%81%E5%AE%89%E8%A3%85%E7%9B%AE%E7%9A%84%E8%B7%AF%E5%BE%84%E5%92%8C%E9%80%89%E6%8B%A9%E9%9C%80%E8%A6%81%E5%AE%89%E8%A3%85%E7%9A%84%E5%8C%85"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 点击Next 选择需要安装目的路径和选择需要安装的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E7%82%B9%E5%87%BBNext-%E9%80%89%E6%8B%A9%E6%8E%A5%E5%8F%97Liscense"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 点击Next 选择接受Liscense</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E7%82%B9%E5%87%BBNext-%E4%B8%87%E4%BA%8B%E5%85%B7%E5%A4%87%E5%8F%AA%E5%B7%AE%E7%82%B9%E5%87%BBInstall%E4%BA%86"><span class="toc-number">5.6.</span> <span class="toc-text">4.6 点击Next 万事具备只差点击Install了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-7-%E7%82%B9%E5%87%BBInstall%E4%B9%8B%E5%90%8E%EF%BC%8C%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="toc-number">5.7.</span> <span class="toc-text">4.7 点击Install之后，开始安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-8-%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%EF%BC%8C%E7%82%B9%E5%87%BB-Next"><span class="toc-number">5.8.</span> <span class="toc-text">4.8 安装完成，点击 Next</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-9-%E5%AE%8C%E6%88%90%EF%BC%8C%E7%9B%B4%E6%8E%A5Finish"><span class="toc-number">5.9.</span> <span class="toc-text">4.9 完成，直接Finish</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%9C%A8Pycharm-%E9%87%8C%E9%9D%A2%E9%85%8D%E7%BD%AE-designer-%E5%92%8C-uic"><span class="toc-number">6.</span> <span class="toc-text">5 在Pycharm 里面配置 designer 和 uic</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%9C%A8-Settings-%E4%B8%AD-gt-Tools-gt-External-Tools-%E9%80%89%E6%8B%A9%E6%96%B0%E5%BB%BA-%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 在 Settings 中 -&gt; Tools -&gt; External Tools 选择新建 外部工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%BB%BA%E7%AB%8B-designer-%E5%B7%A5%E5%85%B7%EF%BC%8C-%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AE%E4%B8%8B%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 建立 designer 工具， 我们需要配置下面的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E5%BB%BA%E7%AB%8B-uic-%E5%B7%A5%E5%85%B7%EF%BC%8C-%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AE%E4%B8%8B%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 建立 uic 工具， 我们需要配置下面的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%88%90%E6%88%91%E4%BB%AC%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E8%BF%99%E4%B8%A4%E4%B8%AA%E5%B7%A5%E5%85%B7%E4%BA%86"><span class="toc-number">6.4.</span> <span class="toc-text">5.4 配置完成我们就可以看到这两个工具了</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E4%BD%BF%E7%94%A8-designer-%E5%92%8C-uic"><span class="toc-number">7.</span> <span class="toc-text">6. 使用 designer 和 uic</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E5%9C%A8%E6%88%91%E4%BB%AC%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E7%82%B9%E5%87%BB-Tools-gt-External-Tools-gt-Qtesigner-%E5%90%AF%E5%8A%A8designer"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 在我们的项目中，点击 Tools -&gt; External Tools -&gt; Qtesigner 启动designer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-%E5%9C%A8designer%E6%8C%89%E9%9C%80%E6%B1%82%E6%8B%96%E6%8B%BD%E7%BC%96%E8%BE%91%E4%BA%86%EF%BC%8C%E4%B9%8B%E5%90%8E%E4%BF%9D%E5%AD%98%E5%88%B0%E6%88%91%E4%BB%AC%E9%A1%B9%E7%9B%AE%E4%B8%AD"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 在designer按需求拖拽编辑了，之后保存到我们项目中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-%E5%9C%A8%E6%88%91%E4%BB%AC%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E7%82%B9%E5%87%BB-Tools-gt-External-Tools-gt-pyuic-%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8pyuic"><span class="toc-number">7.3.</span> <span class="toc-text">6.3 在我们的项目中，点击 Tools -&gt; External Tools -&gt; pyuic 直接调用pyuic</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E5%A5%BD%E4%BA%86%EF%BC%8C%E6%95%B4%E4%B8%AA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90%E4%BA%86%EF%BC%8C%E5%B0%BD%E6%83%85%E4%BA%AB%E7%94%A8%E5%90%A7"><span class="toc-number">8.</span> <span class="toc-text">7. 好了，整个环境搭建和测试已经完成了，尽情享用吧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">9.</span> <span class="toc-text">附录</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-linux_ackdo_setup_pycharm_and_pyqt_env" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux小玩意之 在RHEL8.3 上搭建Pycharm ， Qt IDE开发环境
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/" class="article-date">
+	 published: <time datetime="2021-03-19T16:00:00.000Z" itemprop="datePublished">2021-03-20</time>
+	</a>
+</span>
+
+        
+	<a href="/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/" class="article-date">
+	   updated: <time datetime="2021-03-19T16:00:00.000Z" itemprop="dateUpdated">2021-03-20</time>
+	</a>
+
+
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+  </span>
+
+        
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill"></i>
+	    <!--<span id="busuanzi_container_page_pv" style="display:inline;">-->
+			<span id="busuanzi_value_page_pv" style="display:inline;"></span>
+		<!--</span>-->
+	</span>
+
+
+
+        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/#comments" class="article-comment-link">评论</a></span> -->
+        
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="Pycharm，-Qt-的简介"><a href="#Pycharm，-Qt-的简介" class="headerlink" title="Pycharm， Qt 的简介"></a>Pycharm， Qt 的简介</h1><ul>
+<li>PyCharm 是一个用于计算机编程的集成开发环境(IDE)，主要用于Python语言开发，由捷克公司JetBrains开发，提供代码分析、图形化调试器，集成测试器、集成版本控制系统，并支持使用Django进行网页开发。简介来自 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/PyCharm">wiki-pycharm</a></li>
+<li>Qt 是一个跨平台的C++应用程序开发框架。广泛用于开发GUI程序，这种情况下又被称为部件工具箱。也可用于开发非GUI程序，比如控制台工具和服务器。简介来自 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Qt">wiki-qt</a></li>
+</ul>
+<h1 id="1-环境"><a href="#1-环境" class="headerlink" title="1. 环境"></a>1. 环境</h1><ul>
+<li>Red Hat Enterprise Linux release 8.3 (Ootpa)</li>
+<li>gnome GUI 图形界面</li>
+<li>python38</li>
+<li>qt-unified-linux-x64-4.0.1-1-online 在线安装<br><br></br><h1 id="2-安装-QT"><a href="#2-安装-QT" class="headerlink" title="2. 安装 QT"></a>2. 安装 <a target="_blank" rel="noopener" href="https://www.qt.io/download">QT</a></h1></li>
+<li>直接下载 GUI 的在线安装版本了<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;d13lb3tujbc8s0.cloudfront.net&#x2F;onlineinstallers&#x2F;qt-unified-linux-x64-4.0.1-1-online.run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--2021-02-28 23:05:16--  https:&#x2F;&#x2F;d13lb3tujbc8s0.cloudfront.net&#x2F;onlineinstallers&#x2F;qt-unified-linux-x64-4.0.1-1-online.run</span><br><span class="line">Resolving squid.redhat.com (squid.redhat.com)... 10.68.5.41</span><br><span class="line">Connecting to squid.redhat.com (squid.redhat.com)|10.68.5.41|:3128... connected.</span><br><span class="line">Proxy request sent, awaiting response... 200 OK</span><br><span class="line">Length: 34539447 (33M) [application&#x2F;x-www-form-urlencoded]</span><br><span class="line">Saving to: ‘qt-unified-linux-x64-4.0.1-1-online.run’</span><br><span class="line"></span><br><span class="line">qt-unified-linux-x64-4.0.1-1-onlin 100%[&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&gt;]  32.94M  4.17MB&#x2F;s   in 21s</span><br><span class="line"></span><br><span class="line">2021-02-28 23:05:39 (1.55 MB&#x2F;s) - ‘qt-unified-linux-x64-4.0.1-1-online.run’ saved [34539447&#x2F;34539447]</span><br></pre></td></tr></table></figure>
+<br></br><h1 id="3-下载完毕，添加可执行权限"><a href="#3-下载完毕，添加可执行权限" class="headerlink" title="3. 下载完毕，添加可执行权限"></a>3. 下载完毕，添加可执行权限</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x qt-unified-linux-x64-4.0.1-1-online.run</span><br></pre></td></tr></table></figure>
+<br></br><h1 id="4-运行-qt-unified-linux-x64-4-0-1-1-online-run-启动安装"><a href="#4-运行-qt-unified-linux-x64-4-0-1-1-online-run-启动安装" class="headerlink" title="4. 运行 qt-unified-linux-x64-4.0.1-1-online.run 启动安装"></a>4. 运行 qt-unified-linux-x64-4.0.1-1-online.run 启动安装</h1></li>
+<li>因为是在线安装，需要可以联网，并且过程要下载安装包，需要一些时间<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;qt-unified-linux-x64-4.0.1-1-online.run</span><br></pre></td></tr></table></figure>
+<h2 id="4-1-启动界面，需要输入邮箱，账号（没有的就注册一个好了）"><a href="#4-1-启动界面，需要输入邮箱，账号（没有的就注册一个好了）" class="headerlink" title="4.1 启动界面，需要输入邮箱，账号（没有的就注册一个好了）"></a>4.1 启动界面，需要输入邮箱，账号（没有的就注册一个好了）</h2></li>
+<li>基本就是Next 和 Next 了</li>
+</ul>
+<p><img src="/images/setup_pycharm_welcome1.png" alt="setup_pycharm_welcome1.png"></p>
+<h2 id="4-2-点击Next-选择-Open-Source-Obligations"><a href="#4-2-点击Next-选择-Open-Source-Obligations" class="headerlink" title="4.2 点击Next 选择 Open Source Obligations"></a>4.2 点击Next 选择 Open Source Obligations</h2><p><img src="/images/setup_pycharm_licenseaccept.png" alt="setup_pycharm_licenseaccept.png"></p>
+<h2 id="4-3-点击Next-开始开装Qt"><a href="#4-3-点击Next-开始开装Qt" class="headerlink" title="4.3 点击Next 开始开装Qt"></a>4.3 点击Next 开始开装Qt</h2><p><img src="/images/setup_pycharm_setupQT_start.png" alt="setup_pycharm_setupQT_start.png"></p>
+<h2 id="4-4-点击Next-选择需要安装目的路径和选择需要安装的包"><a href="#4-4-点击Next-选择需要安装目的路径和选择需要安装的包" class="headerlink" title="4.4 点击Next 选择需要安装目的路径和选择需要安装的包"></a>4.4 点击Next 选择需要安装目的路径和选择需要安装的包</h2><ul>
+<li>我安装到 /opt/Qt 和当前默认最新的QT6了<br><img src="/images/setup_pycharm_install_folder.png" alt="setup_pycharm_install_folder.png"><h2 id="4-5-点击Next-选择接受Liscense"><a href="#4-5-点击Next-选择接受Liscense" class="headerlink" title="4.5 点击Next 选择接受Liscense"></a>4.5 点击Next 选择接受Liscense</h2><img src="/images/setup_pycharm_license_aggre.png" alt="setup_pycharm_license_aggre.png"><h2 id="4-6-点击Next-万事具备只差点击Install了"><a href="#4-6-点击Next-万事具备只差点击Install了" class="headerlink" title="4.6 点击Next 万事具备只差点击Install了"></a>4.6 点击Next 万事具备只差点击Install了</h2><img src="/images/setup_pycharm_ready.png" alt="setup_pycharm_ready.png"><h2 id="4-7-点击Install之后，开始安装"><a href="#4-7-点击Install之后，开始安装" class="headerlink" title="4.7 点击Install之后，开始安装"></a>4.7 点击Install之后，开始安装</h2><img src="/images/setup_pycharm_installing.png" alt="setup_pycharm_installing.png"><h2 id="4-8-安装完成，点击-Next"><a href="#4-8-安装完成，点击-Next" class="headerlink" title="4.8 安装完成，点击 Next"></a>4.8 安装完成，点击 Next</h2><img src="/images/setup_pycharm_finished1.png" alt="setup_pycharm_finished1.png"><h2 id="4-9-完成，直接Finish"><a href="#4-9-完成，直接Finish" class="headerlink" title="4.9 完成，直接Finish"></a>4.9 完成，直接Finish</h2><img src="/images/setup_pycharm_finished.png" alt="setup_pycharm_finished.png"><br><br></br><h1 id="5-在Pycharm-里面配置-designer-和-uic"><a href="#5-在Pycharm-里面配置-designer-和-uic" class="headerlink" title="5 在Pycharm 里面配置 designer 和 uic"></a>5 在Pycharm 里面配置 designer 和 uic</h1></li>
+<li>designer 就是我们之前安装qt里面提供的UI设计工具，直接拖拽就好</li>
+<li>uic 就是我们之前安装qt里面提供的ui转py的工具，直接将UI转为PY代码<h2 id="5-1-在-Settings-中-gt-Tools-gt-External-Tools-选择新建-外部工具"><a href="#5-1-在-Settings-中-gt-Tools-gt-External-Tools-选择新建-外部工具" class="headerlink" title="5.1 在 Settings 中 -&gt; Tools -&gt; External Tools 选择新建 外部工具"></a>5.1 在 Settings 中 -&gt; Tools -&gt; External Tools 选择新建 外部工具</h2><img src="/images/setup_pycharm_createExternal1.png" alt="setup_pycharm_createExternal1.png"><h2 id="5-2-建立-designer-工具，-我们需要配置下面的内容"><a href="#5-2-建立-designer-工具，-我们需要配置下面的内容" class="headerlink" title="5.2 建立 designer 工具， 我们需要配置下面的内容"></a>5.2 建立 designer 工具， 我们需要配置下面的内容</h2></li>
+<li>Name 这个外部工具的名字 （我们就叫 QtDesigner 了）</li>
+<li>Description 工具描述 （可选的， 我主要是为了好记忆）</li>
+<li>Programs 工具路径 （根据我们qt安装路径选择）</li>
+<li>Working directory （工作路径，这个就选我们python项目的路径好了）</li>
+<li>配置好以后，点击OK 就搞定了<br><img src="/images/setup_pycharm_createQTD.png" alt="setup_pycharm_createQTD.png"><h2 id="5-3-建立-uic-工具，-我们需要配置下面的内容"><a href="#5-3-建立-uic-工具，-我们需要配置下面的内容" class="headerlink" title="5.3 建立 uic 工具， 我们需要配置下面的内容"></a>5.3 建立 uic 工具， 我们需要配置下面的内容</h2></li>
+<li>Name 这个外部工具的名字 （我们就叫 pyuic 了）</li>
+<li>Description 工具描述 （可选的， 我主要是为了好记忆）</li>
+<li>Programs 工具路径 （根据我们qt安装路径选择）</li>
+<li>Arguments 执行uic时候的参数 （点击+号，我们看到有宏可以用，其实目标就是将 .ui 通过 uic 然后 -o 输出到.py）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-m PyQt6.uic.pyuic $FileDir$&#x2F;$FileNameWithoutExtension$.ui -o $FileDir$&#x2F;$FileNameWithoutExtension$.py</span><br></pre></td></tr></table></figure></li>
+<li>Working directory （工作路径，这个就选我们python项目的路径好了）</li>
+<li>配置好以后，点击OK 就搞定了<br><img src="/images/setup_pycharm_pyuic_ok.png" alt="setup_pycharm_pyuic_ok.png"><h2 id="5-4-配置完成我们就可以看到这两个工具了"><a href="#5-4-配置完成我们就可以看到这两个工具了" class="headerlink" title="5.4 配置完成我们就可以看到这两个工具了"></a>5.4 配置完成我们就可以看到这两个工具了</h2><img src="/images/setup_pycharm_createfinished.png" alt="setup_pycharm_createfinished.png"><br><br></br><h1 id="6-使用-designer-和-uic"><a href="#6-使用-designer-和-uic" class="headerlink" title="6. 使用 designer 和 uic"></a>6. 使用 designer 和 uic</h1><h2 id="6-1-在我们的项目中，点击-Tools-gt-External-Tools-gt-Qtesigner-启动designer"><a href="#6-1-在我们的项目中，点击-Tools-gt-External-Tools-gt-Qtesigner-启动designer" class="headerlink" title="6.1 在我们的项目中，点击 Tools -&gt; External Tools -&gt; Qtesigner 启动designer"></a>6.1 在我们的项目中，点击 Tools -&gt; External Tools -&gt; Qtesigner 启动designer</h2><img src="/images/setup_pycharm_calltools.png" alt="setup_pycharm_calltools.png"><h2 id="6-2-在designer按需求拖拽编辑了，之后保存到我们项目中"><a href="#6-2-在designer按需求拖拽编辑了，之后保存到我们项目中" class="headerlink" title="6.2 在designer按需求拖拽编辑了，之后保存到我们项目中"></a>6.2 在designer按需求拖拽编辑了，之后保存到我们项目中</h2><img src="/images/setup_pycharm_qtdesign.png" alt="setup_pycharm_qtdesign.png"><h2 id="6-3-在我们的项目中，点击-Tools-gt-External-Tools-gt-pyuic-直接调用pyuic"><a href="#6-3-在我们的项目中，点击-Tools-gt-External-Tools-gt-pyuic-直接调用pyuic" class="headerlink" title="6.3 在我们的项目中，点击 Tools -&gt; External Tools -&gt; pyuic 直接调用pyuic"></a>6.3 在我们的项目中，点击 Tools -&gt; External Tools -&gt; pyuic 直接调用pyuic</h2></li>
+<li>pyuic不会出现运行界面，执行完成后，我们可以在项目路径生成了对应的 py 和转换的结果<br><img src="/images/setup_pycharm_pyuic.png" alt="setup_pycharm_pyuic.png"><br><br></br><h1 id="7-好了，整个环境搭建和测试已经完成了，尽情享用吧"><a href="#7-好了，整个环境搭建和测试已经完成了，尽情享用吧" class="headerlink" title="7. 好了，整个环境搭建和测试已经完成了，尽情享用吧"></a>7. 好了，整个环境搭建和测试已经完成了，尽情享用吧</h1></li>
+</ul>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><ul>
+<li>当然，我们也可以将整个环境打包到容器里面。 比如我打包的这个， 基于红帽的 RHEL8 UBI 镜像（打包之后大约3.9G）。 这样我们就可以在任何带有podman的容器环境执行了，不需要去担心依赖问题。后续也会写一份关于容器实现文档<br><img src="/images/setup_pycharm_container.png" alt="setup_pycharm_container.png"></li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.ackdo.com/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/" title="Linux小玩意之 在RHEL8.3 上搭建Pycharm ， Qt IDE开发环境" target="_blank" rel="external">http://www.ackdo.com/2021/03/20/linux_ackdo_setup_pycharm_and_pyqt_env/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">AckDo by Sam Lee</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/03/20/code_ackdo_understand_e1000_driver/" title="Linux 代码分析 9步了解Linux内核网卡驱动 基于e1000"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/03/20/code_ackdo_customized_syscall/" title="Linux 实用小代码，自定义一个系统调用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+    <div class="container" align="left">
+    <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+      <img src="/images/wechatp.png" itemprop="contentUrl">
+      <span>欢迎关注公众号</span>
+    </div>
+    </div>
+</nav>
+
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>您能有收获就是我们最大的动力</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码捐赠</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码捐赠</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+	<a target="_blank" rel="noopener" href="https://beian.miit.gov.cn" text-align: center >粤ICP备2021024811号</a>
+        </div>
+<!--    
+    <div>
+     <img src="/images/logo.png" width="140" height="140">
+    </div>
+-->
+    </div>
+
+
+        <!-- 不蒜子统计    //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js -->
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <!--<span id="busuanzi_container_site_pv" style="display:inline;">-->本站总访问量<span id="busuanzi_value_site_pv" style="display:inline;></span>次</span>
+        <span class="post-meta-divider">|</span>
+  
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
