@@ -17,23 +17,20 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Linux 内核源码的分布 内核版本 5.12.1 发布时间 2021-03-1 | AckDo.com</title>
-  <meta name="description" content="1 背景大家或许想了解，Linux 内核代码里面存在着这么多文件夹，他们都是些什么文件夹呢？ 而这些文件夹里面有多少代码量呢？ 看完这两张简单的图片，或许可以解开大家的困惑。 2 内核版本2.1 内核版本 mainline:    5.12-rc1    发布时间 2021-03-01- 通过文件夹的大小分类 单位是:KB - 通过 .c, .h .S 源码文件的代码行数分类，单位是:千行 K l">
+  <title>RHEL 8.4 上 vmmon 错误导致无法启动VMware® Workstation | AckDo.com</title>
+  <meta name="description" content="1 环境 如果在尝试 VMware Workstation 15 的 evaluation 版本 xorg-x11-drv-vmware-13.2.1-8.el8.x86_64 Red Hat Enterprise Linux release 8.4 (Ootpa) 4.18.0-305.el8.x86_64  2 启动的时候，出现错误。可以看到 machine monitor 出错了123456">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 内核源码的分布 内核版本 5.12.1 发布时间 2021-03-1">
-<meta property="og:url" content="http://www.ackdo.com/2021/03/01/kernel_ackdo_classify_5121/index.html">
+<meta property="og:title" content="RHEL 8.4 上 vmmon 错误导致无法启动VMware® Workstation">
+<meta property="og:url" content="http://www.ackdo.com/2021/05/29/linux_ackdo_fixed_vmware_error/index.html">
 <meta property="og:site_name" content="AckDo">
-<meta property="og:description" content="1 背景大家或许想了解，Linux 内核代码里面存在着这么多文件夹，他们都是些什么文件夹呢？ 而这些文件夹里面有多少代码量呢？ 看完这两张简单的图片，或许可以解开大家的困惑。 2 内核版本2.1 内核版本 mainline:    5.12-rc1    发布时间 2021-03-01- 通过文件夹的大小分类 单位是:KB - 通过 .c, .h .S 源码文件的代码行数分类，单位是:千行 K l">
+<meta property="og:description" content="1 环境 如果在尝试 VMware Workstation 15 的 evaluation 版本 xorg-x11-drv-vmware-13.2.1-8.el8.x86_64 Red Hat Enterprise Linux release 8.4 (Ootpa) 4.18.0-305.el8.x86_64  2 启动的时候，出现错误。可以看到 machine monitor 出错了123456">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.ackdo.com/images/categoried_by_Size5121.png">
-<meta property="og:image" content="http://www.ackdo.com/images/categoried_by_Lines5121.png">
-<meta property="article:published_time" content="2021-02-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-02-28T16:00:00.000Z">
+<meta property="article:published_time" content="2021-05-29T15:40:00.000Z">
+<meta property="article:modified_time" content="2021-05-28T16:00:00.000Z">
 <meta property="article:author" content="Sam Lee">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.ackdo.com/images/categoried_by_Size5121.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://www.ackdo.com/2021/03/01/kernel_ackdo_classify_5121/index.html">
+  <link rel="canonical" href="http://www.ackdo.com/2021/05/29/linux_ackdo_fixed_vmware_error/index.html">
   
     <link rel="alternate" href="/atom.xml" title="AckDo" type="application/atom+xml">
   
@@ -296,21 +293,21 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">1 背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC"><span class="toc-number">2.</span> <span class="toc-text">2 内核版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC-mainline-5-12-rc1-%E5%8F%91%E5%B8%83%E6%97%B6%E9%97%B4-2021-03-01"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 内核版本 mainline:    5.12-rc1    发布时间 2021-03-01</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%96%87%E4%BB%B6%E5%A4%B9%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%88%86%E7%B1%BB-%E5%8D%95%E4%BD%8D%E6%98%AF-KB"><span class="toc-number">2.1.1.</span> <span class="toc-text">- 通过文件夹的大小分类 单位是:KB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-c-h-S-%E6%BA%90%E7%A0%81%E6%96%87%E4%BB%B6%E7%9A%84%E4%BB%A3%E7%A0%81%E8%A1%8C%E6%95%B0%E5%88%86%E7%B1%BB%EF%BC%8C%E5%8D%95%E4%BD%8D%E6%98%AF-%E5%8D%83%E8%A1%8C-K-lines"><span class="toc-number">2.1.2.</span> <span class="toc-text">- 通过 .c, .h .S 源码文件的代码行数分类，单位是:千行 K lines</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">1 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%90%AF%E5%8A%A8%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E5%87%BA%E7%8E%B0%E9%94%99%E8%AF%AF%E3%80%82%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0-machine-monitor-%E5%87%BA%E9%94%99%E4%BA%86"><span class="toc-number">2.</span> <span class="toc-text">2 启动的时候，出现错误。可以看到 machine monitor 出错了</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E9%80%9A%E8%BF%87%E8%BF%99%E4%B8%AA%E9%94%99%E8%AF%AF-%E5%8F%AF%E4%BB%A5%E7%9F%A5%E9%81%93%EF%BC%8C%E8%82%AF%E5%AE%9A%E6%98%AF-vmmon-%E6%97%A0%E6%B3%95%E6%AD%A3%E5%B8%B8%E5%8A%A0%E8%BD%BD%E4%BA%86%E3%80%82"><span class="toc-number">3.</span> <span class="toc-text">3 通过这个错误. 可以知道，肯定是 vmmon 无法正常加载了。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E6%A3%80%E6%9F%A5RHEL-8-4-%E7%9A%84%E6%BA%90%E7%A0%81-%EF%BC%88%E5%BC%80%E6%BA%90%E5%B0%B1%E6%98%AF%E5%A5%BD%E5%91%80%EF%BC%8C%E9%9A%8F%E6%97%B6%E5%8F%AF%E4%BB%A5%E7%9C%8B%E6%BA%90%E7%A0%81-%EF%BC%9AD%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 检查RHEL 8.4 的源码 （开源就是好呀，随时可以看源码 ：D）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E6%A3%80%E6%9F%A5-vmmon-%E7%9A%84%E6%BA%90%E7%A0%81-hostif-c%EF%BC%8C-%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E9%87%8C%E9%9D%A2%E7%94%A8%E7%9A%84%E8%BF%98%E6%98%AF%E6%97%A7%E5%90%8D%E5%AD%97%EF%BC%9B-ok-%E9%97%AE%E9%A2%98%E6%89%BE%E5%88%B0%EF%BC%8C%E9%82%A3%E5%B0%B1%E5%A5%BD%E5%8A%9E%E4%BA%86%EF%BC%8C%E7%9B%B4%E6%8E%A5%E4%BF%AE%E6%94%B9%E3%80%82%E8%BF%99%E4%B8%AA%E5%BA%94%E8%AF%A5%E6%98%AFvmware-%E7%9A%84bug%E4%BA%86%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%8F%8A%E6%97%B6%E4%BF%AE%E6%AD%A3%E6%9D%A5%E9%80%82%E9%85%8D%E6%96%B0%E7%9A%84%E5%86%85%E6%A0%B8%E3%80%82"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 检查 vmmon 的源码 hostif.c， 可以看到里面用的还是旧名字； ok 问题找到，那就好办了，直接修改。这个应该是vmware 的bug了，没有及时修正来适配新的内核。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E4%BF%AE%E6%94%B9%E5%AE%8C%E6%AF%95-%E9%87%8D%E6%96%B0%E7%BC%96%E8%AF%91%E8%BF%99%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%B0%B1%E5%A5%BD%E4%BA%86"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 修改完毕,重新编译这个模块就好了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-%E7%BC%96%E8%AF%91%E5%AE%8C%E6%AF%95%EF%BC%8C%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD%E5%90%8E%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E6%AD%A3%E5%B8%B8%E4%BD%BF%E7%94%A8%E4%BA%86%E3%80%82"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 编译完毕，重新加载后，就可以正常使用了。</span></a></li></ol></li></ol>
     </nav>
   </div>
 </aside>
 
 <main class="main" role="main">
   <div class="content">
-  <article id="post-kernel_ackdo_classify_5121" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-linux_ackdo_fixed_vmware_error" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      Linux 内核源码的分布 内核版本 5.12.1 发布时间 2021-03-1
+      RHEL 8.4 上 vmmon 错误导致无法启动VMware® Workstation
     </h1>
   
 
@@ -318,21 +315,21 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2021/03/01/kernel_ackdo_classify_5121/" class="article-date">
-	 published: <time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished">2021-03-01</time>
+	<a href="/2021/05/29/linux_ackdo_fixed_vmware_error/" class="article-date">
+	 published: <time datetime="2021-05-29T15:40:00.000Z" itemprop="datePublished">2021-05-29</time>
 	</a>
 </span>
 
         
-	<a href="/2021/03/01/kernel_ackdo_classify_5121/" class="article-date">
-	   updated: <time datetime="2021-02-28T16:00:00.000Z" itemprop="dateUpdated">2021-03-01</time>
+	<a href="/2021/05/29/linux_ackdo_fixed_vmware_error/" class="article-date">
+	   updated: <time datetime="2021-05-28T16:00:00.000Z" itemprop="dateUpdated">2021-05-29</time>
 	</a>
 
 
         
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a>
+    <a class="article-category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
   </span>
 
         
@@ -347,7 +344,7 @@
 
 
 
-        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/01/kernel_ackdo_classify_5121/#comments" class="article-comment-link">评论</a></span> -->
+        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/05/29/linux_ackdo_fixed_vmware_error/#comments" class="article-comment-link">评论</a></span> -->
         
 	
 	
@@ -356,9 +353,22 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h1><p>大家或许想了解，Linux 内核代码里面存在着这么多文件夹，他们都是些什么文件夹呢？ 而这些文件夹里面有多少代码量呢？ 看完这两张简单的图片，或许可以解开大家的困惑。</p>
-<h1 id="2-内核版本"><a href="#2-内核版本" class="headerlink" title="2 内核版本"></a>2 内核版本</h1><h2 id="2-1-内核版本-mainline-5-12-rc1-发布时间-2021-03-01"><a href="#2-1-内核版本-mainline-5-12-rc1-发布时间-2021-03-01" class="headerlink" title="2.1 内核版本 mainline:    5.12-rc1    发布时间 2021-03-01"></a>2.1 内核版本 mainline:    5.12-rc1    发布时间 2021-03-01</h2><h3 id="通过文件夹的大小分类-单位是-KB"><a href="#通过文件夹的大小分类-单位是-KB" class="headerlink" title="- 通过文件夹的大小分类 单位是:KB"></a>- 通过文件夹的大小分类 单位是:KB</h3><p><img src="/images/categoried_by_Size5121.png" alt="categoried by Size: "></p>
-<h3 id="通过-c-h-S-源码文件的代码行数分类，单位是-千行-K-lines"><a href="#通过-c-h-S-源码文件的代码行数分类，单位是-千行-K-lines" class="headerlink" title="- 通过 .c, .h .S 源码文件的代码行数分类，单位是:千行 K lines"></a>- 通过 .c, .h .S 源码文件的代码行数分类，单位是:千行 K lines</h3><p><img src="/images/categoried_by_Lines5121.png" alt="categoried by Lines: "></p>
+        <h1 id="1-环境"><a href="#1-环境" class="headerlink" title="1 环境"></a>1 环境</h1><ul>
+<li>如果在尝试 VMware Workstation 15 的 evaluation 版本</li>
+<li>xorg-x11-drv-vmware-13.2.1-8.el8.x86_64</li>
+<li>Red Hat Enterprise Linux release 8.4 (Ootpa)</li>
+<li>4.18.0-305.el8.x86_64</li>
+</ul>
+<h1 id="2-启动的时候，出现错误。可以看到-machine-monitor-出错了"><a href="#2-启动的时候，出现错误。可以看到-machine-monitor-出错了" class="headerlink" title="2 启动的时候，出现错误。可以看到 machine monitor 出错了"></a>2 启动的时候，出现错误。可以看到 <code>machine monitor</code> 出错了</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">May 29 22:03:02 ok vmware[185145]:   Virtual machine monitor[FAILED]</span><br><span class="line">May 29 22:03:02 ok vmware[185145]:   Virtual machine communication interface[  OK  ]</span><br><span class="line">May 29 22:03:02 ok vmware[185145]:   VM communication interface socket family[  OK  ]</span><br><span class="line">May 29 22:03:02 ok vmware[185145]:   Blocking file system[  OK  ]</span><br><span class="line">May 29 22:03:02 ok vmware[185145]:   VMware Authentication Daemon[  OK  ]</span><br><span class="line">May 29 22:03:02 ok systemd[1]: vmware.service: Control process exited, code&#x3D;exited status&#x3D;1</span><br><span class="line">May 29 22:03:02 ok systemd[1]: vmware.service: Failed with result &#39;exit-code&#39;.</span><br></pre></td></tr></table></figure>
+<h1 id="3-通过这个错误-可以知道，肯定是-vmmon-无法正常加载了。"><a href="#3-通过这个错误-可以知道，肯定是-vmmon-无法正常加载了。" class="headerlink" title="3 通过这个错误. 可以知道，肯定是 vmmon 无法正常加载了。"></a>3 通过这个错误. 可以知道，肯定是 <code>vmmon</code> 无法正常加载了。</h1><h2 id="3-1-检查RHEL-8-4-的源码-（开源就是好呀，随时可以看源码-：D）"><a href="#3-1-检查RHEL-8-4-的源码-（开源就是好呀，随时可以看源码-：D）" class="headerlink" title="3.1 检查RHEL 8.4 的源码 （开源就是好呀，随时可以看源码 ：D）"></a>3.1 检查RHEL 8.4 的源码 （开源就是好呀，随时可以看源码 ：D）</h2><ul>
+<li>通过源码可以知道，RHEL8.4 有一个 commint （过程不说了，就看重点）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mm: memcg: convert vmstat slab counters to bytes</span><br><span class="line">In order to prepare for per-object slab memory accounting, convert</span><br><span class="line">NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE vmstat items to bytes.</span><br><span class="line">To make it obvious, rename them to NR_SLAB_RECLAIMABLE_B and</span><br><span class="line">NR_SLAB_UNRECLAIMABLE_B (similar to NR_KERNEL_STACK_KB).</span><br></pre></td></tr></table></figure></li>
+<li>具体 commit 的部分<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">--- a&#x2F;include&#x2F;linux&#x2F;mmzone.h</span><br><span class="line">+++ b&#x2F;include&#x2F;linux&#x2F;mmzone.h</span><br><span class="line">@@ -173,8 +173,8 @@ enum node_stat_item &#123;</span><br><span class="line">        NR_INACTIVE_FILE,       &#x2F;*  &quot;     &quot;     &quot;   &quot;       &quot;         *&#x2F;</span><br><span class="line">        NR_ACTIVE_FILE,         &#x2F;*  &quot;     &quot;     &quot;   &quot;       &quot;         *&#x2F;</span><br><span class="line">        NR_UNEVICTABLE,         &#x2F;*  &quot;     &quot;     &quot;   &quot;       &quot;         *&#x2F;</span><br><span class="line">-       NR_SLAB_RECLAIMABLE,</span><br><span class="line">-       NR_SLAB_UNRECLAIMABLE,</span><br><span class="line">+       NR_SLAB_RECLAIMABLE_B,</span><br><span class="line">+       NR_SLAB_UNRECLAIMABLE_B,</span><br><span class="line">        NR_ISOLATED_ANON,       &#x2F;* Temporary isolated pages from anon lru *&#x2F;</span><br><span class="line">        NR_ISOLATED_FILE,       &#x2F;* Temporary isolated pages from file lru *&#x2F;</span><br><span class="line">        RH_KABI_BROKEN_INSERT_ENUM(WORKINGSET_NODES)</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-检查-vmmon-的源码-hostif-c，-可以看到里面用的还是旧名字；-ok-问题找到，那就好办了，直接修改。这个应该是vmware-的bug了，没有及时修正来适配新的内核。"><a href="#3-2-检查-vmmon-的源码-hostif-c，-可以看到里面用的还是旧名字；-ok-问题找到，那就好办了，直接修改。这个应该是vmware-的bug了，没有及时修正来适配新的内核。" class="headerlink" title="3.2 检查 vmmon 的源码 hostif.c， 可以看到里面用的还是旧名字； ok 问题找到，那就好办了，直接修改。这个应该是vmware 的bug了，没有及时修正来适配新的内核。"></a>3.2 检查 <code>vmmon</code> 的源码 <code>hostif.c</code>， 可以看到里面用的还是旧名字； ok 问题找到，那就好办了，直接修改。这个应该是vmware 的bug了，没有及时修正来适配新的内核。</h2></li>
+<li>原始文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1741    &#x2F;* NR_SLAB_* moved from zone to node in 4.13. *&#x2F;</span><br><span class="line">1742 #if LINUX_VERSION_CODE &gt;&#x3D; KERNEL_VERSION(4, 13, 0)</span><br><span class="line">1743    lockedPages +&#x3D; global_node_page_state(NR_SLAB_UNRECLAIMABLE);</span><br></pre></td></tr></table></figure></li>
+<li>修改后的文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1741    &#x2F;* NR_SLAB_* moved from zone to node in 4.13. *&#x2F;</span><br><span class="line">1742 #if LINUX_VERSION_CODE &gt;&#x3D; KERNEL_VERSION(4, 13, 0)</span><br><span class="line">1743    lockedPages +&#x3D; global_node_page_state(NR_SLAB_UNRECLAIMABLE_B);</span><br></pre></td></tr></table></figure>
+<h2 id="3-3-修改完毕-重新编译这个模块就好了"><a href="#3-3-修改完毕-重新编译这个模块就好了" class="headerlink" title="3.3 修改完毕,重新编译这个模块就好了"></a>3.3 修改完毕,重新编译这个模块就好了</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filename:       &#x2F;lib&#x2F;modules&#x2F;4.18.0-305.el8.x86_64&#x2F;misc&#x2F;vmmon.ko</span><br><span class="line">supported:      external</span><br><span class="line">license:        GPL v2</span><br><span class="line">description:    VMware Virtual Machine Monitor.</span><br><span class="line">author:         VMware, Inc.</span><br><span class="line">rhelversion:    8.4</span><br><span class="line">srcversion:     5300503E15044358103C5CF</span><br><span class="line">depends:</span><br><span class="line">name:           vmmon</span><br><span class="line">vermagic:       4.18.0-305.el8.x86_64 SMP mod_unload modversions</span><br></pre></td></tr></table></figure>
+<h2 id="3-4-编译完毕，重新加载后，就可以正常使用了。"><a href="#3-4-编译完毕，重新加载后，就可以正常使用了。" class="headerlink" title="3.4 编译完毕，重新加载后，就可以正常使用了。"></a>3.4 编译完毕，重新加载后，就可以正常使用了。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># systemctl status vmware</span><br><span class="line">● vmware.service - SYSV: This service starts and stops VMware services</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;vmware; generated)</span><br><span class="line">   Active: active (running) since Sat 2021-05-29 23:30:06 CST; 6min ago</span><br><span class="line">     Docs: man:systemd-sysv-generator(8)</span><br><span class="line">  Process: 568840 ExecStart&#x3D;&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;vmware start (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">    Tasks: 12 (limit: 253555)</span><br><span class="line">   Memory: 14.0M</span><br><span class="line">   ......</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
@@ -368,7 +378,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://www.ackdo.com/2021/03/01/kernel_ackdo_classify_5121/" title="Linux 内核源码的分布 内核版本 5.12.1 发布时间 2021-03-1" target="_blank" rel="external">http://www.ackdo.com/2021/03/01/kernel_ackdo_classify_5121/</a>
+      <a href="http://www.ackdo.com/2021/05/29/linux_ackdo_fixed_vmware_error/" title="RHEL 8.4 上 vmmon 错误导致无法启动VMware® Workstation" target="_blank" rel="external">http://www.ackdo.com/2021/05/29/linux_ackdo_fixed_vmware_error/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -408,13 +418,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2021/03/07/Kernel-3.10.0-1160.15.2.el7_kernel-parameters/" title="RHEL7 内核参数 Kernel-3.10.0-1160.15.2.el7_kernel-parameters"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2021/02/28/ipmi_ackdo_getdeviceID_source_code/" title="IPMI 实用小代码，发送 Get Device ID"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2021/05/15/linux_ackdo_setup_bugzilla/" title="Linux小玩意之 在RHEL8.2 上安装bugzilla 管理系统"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
