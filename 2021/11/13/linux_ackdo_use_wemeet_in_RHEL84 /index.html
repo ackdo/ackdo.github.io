@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用 | AckDo.com</title>
+  <meta name="description" content="在 RHEL 8.4 上安装配置 腾讯会议 应用1 背景 腾讯会议算是目前国内使用比较多视频会议系统, 但是有个问题, 当前腾讯并没有针对 Red Hat Enterprise Linux 8.4 提供 rpm 包, 源码或者二进制文件. 如果您希望在 Red Hat Enterprise Linux 8.4 上使用 腾讯会议软件, 那您就可以参考这篇文章.  2 环境 Red Hat Enter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用">
+<meta property="og:url" content="http://www.ackdo.com/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/index.html">
+<meta property="og:site_name" content="AckDo">
+<meta property="og:description" content="在 RHEL 8.4 上安装配置 腾讯会议 应用1 背景 腾讯会议算是目前国内使用比较多视频会议系统, 但是有个问题, 当前腾讯并没有针对 Red Hat Enterprise Linux 8.4 提供 rpm 包, 源码或者二进制文件. 如果您希望在 Red Hat Enterprise Linux 8.4 上使用 腾讯会议软件, 那您就可以参考这篇文章.  2 环境 Red Hat Enter">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.ackdo.com/images/wemeet1.png">
+<meta property="og:image" content="http://www.ackdo.com/images/wemeet2.png">
+<meta property="og:image" content="http://www.ackdo.com/images/wemeet3.png">
+<meta property="og:image" content="http://www.ackdo.com/images/wemeet4.png">
+<meta property="article:published_time" content="2021-11-13T15:40:00.000Z">
+<meta property="article:modified_time" content="2021-11-12T16:00:00.000Z">
+<meta property="article:author" content="Sam Lee">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.ackdo.com/images/wemeet1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.ackdo.com/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="AckDo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img src="/images/avatar.png" width="400" height="400">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">AckDo by Sam Lee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="站内搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">站点首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档文档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">文档分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">常用链接</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">共享白板</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <div class="container" align="left">
+    <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+      <img src="/images/wechatp.png" itemprop="contentUrl">
+      <span>欢迎大家关注公众号 AckDo </span>
+    </div>
+    </div>
+
+    
+      <div class="widget">
+    <h3 class="widget-title">公告牌</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 欢迎来到 AckDo ，Ack & Do it right now! 只要开始踏实地去做，就永远不会太迟。 我是一个Linux 拥趸：D。 目前正在用的Linux 版本是 Red Hat Enterprise Linux release 8.4 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">文档分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IPMI-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">IPMI 技巧(原创)</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F-%E5%AE%B9%E5%99%A8-%E5%8E%9F%E5%88%9B/">云原生 容器(原创)</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%86%85%E6%A0%B8%E6%96%87%E6%A1%A3/">内核文档</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C-OVS-%E5%8E%9F%E5%88%9B/">网络 OVS(原创)</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/" class="title">在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-13T15:40:00.000Z" itemprop="datePublished">2021-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/06/linux_ackdo_RHEL8_DNS_config/" class="title">在 Red Hat Enterprise Linux 8 搭建 DNS 服务器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-06T13:00:00.000Z" itemprop="datePublished">2021-11-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux-%E4%BB%A3%E7%A0%81-%E5%8E%9F%E5%88%9B/">Linux 代码(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/17/kernel_ackdo_classify_51413/" class="title">Linux 内核源码的分布 内核版本 5.14.13 发布时间 2021-10-17</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-16T16:00:00.000Z" itemprop="datePublished">2021-10-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/05/29/linux_ackdo_fixed_vmware_error/" class="title">RHEL 8.4 上 vmmon 错误导致无法启动VMware® Workstation</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-05-29T15:40:00.000Z" itemprop="datePublished">2021-05-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/05/15/linux_ackdo_setup_bugzilla/" class="title">Linux小玩意之 在RHEL8.2 上安装bugzilla 管理系统</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-05-14T16:00:00.000Z" itemprop="datePublished">2021-05-15</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8-RHEL-8-4-%E4%B8%8A%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE-%E5%BA%94%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">在 RHEL 8.4 上安装配置 腾讯会议 应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">1 背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83"><span class="toc-number">3.</span> <span class="toc-text">2 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E9%9C%80%E8%A6%81%E7%94%A8%E5%88%B0%E7%9A%84%E4%BE%9D%E8%B5%96%E5%BA%93-%E7%BB%9D%E5%A4%A7%E9%83%A8%E5%88%86%E7%B3%BB%E7%BB%9F%E5%B7%B2%E7%BB%8F%E9%BB%98%E8%AE%A4%E5%AE%89%E8%A3%85-%E6%A0%B9%E6%8D%AE-ldd-%E7%9A%84%E7%BB%93%E6%9E%9C-%E6%8C%89%E9%9C%80%E5%AE%89%E8%A3%85%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BA%86"><span class="toc-number">4.</span> <span class="toc-text">3 需要用到的依赖库 (绝大部分系统已经默认安装, 根据 ldd 的结果,按需安装就可以了.)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%8B%86%E8%A7%A3%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">4 拆解文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%B0%86%E9%A2%9D%E5%A4%96%E7%9A%84%E4%BE%9D%E8%B5%96%E5%BA%93-copy-%E5%88%B0%E7%B3%BB%E7%BB%9F%E5%AF%B9%E5%BA%94%E7%9A%84%E8%B7%AF%E5%BE%84"><span class="toc-number">6.</span> <span class="toc-text">5 将额外的依赖库 copy 到系统对应的路径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E6%A3%80%E6%9F%A5%E7%A1%AE%E8%AE%A4%E5%BA%93%E9%83%BD%E9%BD%90%E5%85%A8"><span class="toc-number">7.</span> <span class="toc-text">6 检查确认库都齐全</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E5%88%9B%E5%BB%BA%E5%9B%BE%E6%A0%87%E9%93%BE%E6%8E%A5"><span class="toc-number">8.</span> <span class="toc-text">7 创建图标链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-%E5%90%AF%E5%8A%A8wemeetapp-%E9%80%9A%E8%BF%87%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F%E6%88%96%E8%80%85%E7%82%B9%E5%87%BB%E5%9B%BE%E6%A0%87-%E4%BB%A5%E7%82%B9%E5%87%BB%E5%9B%BE%E6%A0%87%E4%B8%BA%E4%BE%8B"><span class="toc-number">9.</span> <span class="toc-text">8 启动wemeetapp, 通过快捷方式或者点击图标(以点击图标为例)</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-linux_ackdo_use_wemeet_in_RHEL84 " class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/" class="article-date">
+	 published: <time datetime="2021-11-13T15:40:00.000Z" itemprop="datePublished">2021-11-13</time>
+	</a>
+</span>
+
+        
+	<a href="/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/" class="article-date">
+	   updated: <time datetime="2021-11-12T16:00:00.000Z" itemprop="dateUpdated">2021-11-13</time>
+	</a>
+
+
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux-%E6%8A%80%E5%B7%A7-%E5%8E%9F%E5%88%9B/">Linux 技巧(原创)</a>
+  </span>
+
+        
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill"></i>
+	    <!--<span id="busuanzi_container_page_pv" style="display:inline;">-->
+			<span id="busuanzi_value_page_pv" style="display:inline;"></span>
+		<!--</span>-->
+	</span>
+
+
+
+        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/#comments" class="article-comment-link">评论</a></span> -->
+        
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="在-RHEL-8-4-上安装配置-腾讯会议-应用"><a href="#在-RHEL-8-4-上安装配置-腾讯会议-应用" class="headerlink" title="在 RHEL 8.4 上安装配置 腾讯会议 应用"></a>在 RHEL 8.4 上安装配置 腾讯会议 应用</h1><h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h1><ul>
+<li>腾讯会议算是目前国内使用比较多视频会议系统, 但是有个问题, 当前腾讯并没有针对 Red Hat Enterprise Linux 8.4 提供 rpm 包, 源码或者二进制文件. 如果您希望在 Red Hat Enterprise Linux 8.4 上使用 腾讯会议软件, 那您就可以参考这篇文章.</li>
+</ul>
+<h1 id="2-环境"><a href="#2-环境" class="headerlink" title="2 环境"></a>2 环境</h1><ul>
+<li>Red Hat Enterprise Linux 8.4</li>
+<li>4.18.0-305.25.1.el8_4.x86_64</li>
+<li><a target="_blank" rel="noopener" href="https://updatecdn.meeting.qq.com/cos/196cdf1a3336d5dca56142398818545f/TencentMeeting_0300000000_2.8.0.1_x86_64.publish.deb">TencentMeeting_0300000000_2.8.0.1_x86_64</a></li>
+</ul>
+<h1 id="3-需要用到的依赖库-绝大部分系统已经默认安装-根据-ldd-的结果-按需安装就可以了"><a href="#3-需要用到的依赖库-绝大部分系统已经默认安装-根据-ldd-的结果-按需安装就可以了" class="headerlink" title="3 需要用到的依赖库 (绝大部分系统已经默认安装, 根据 ldd 的结果,按需安装就可以了.)"></a>3 需要用到的依赖库 (绝大部分系统已经默认安装, 根据 <code>ldd</code> 的结果,按需安装就可以了.)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">libstdc++-8.4.1-1.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">libgcc-8.4.1-1.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">qt5-qtwebkit-5.212.0-0.42.alpha3.el8.x86_64</span><br><span class="line">qt5-qtx11extras-5.12.5-1.el8.x86_64</span><br><span class="line">qt5-qtbase-5.12.5-8.el8.x86_64</span><br><span class="line">libXrandr-1.5.2-1.el8.x86_64</span><br><span class="line">libX11-1.6.8-4.el8.x86_64</span><br><span class="line">libwayland-egl-1.17.0-1.el8.x86_64</span><br><span class="line">qt5-qtbase-gui-5.12.5-8.el8.x86_64</span><br><span class="line">qt5-qtwebkit-5.212.0-0.42.alpha3.el8.x86_64</span><br><span class="line">qt5-qtbase-5.12.5-8.el8.x86_64</span><br><span class="line">qt5-qtbase-gui-5.12.5-8.el8.x86_64</span><br><span class="line">qt5-qtbase-5.12.5-8.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">libbsd-0.9.1-4.el8.x86_64</span><br><span class="line">qt5-qtbase-gui-5.12.5-8.el8.x86_64</span><br><span class="line">libglvnd-glx-1.3.2-1.el8.x86_64</span><br><span class="line">dbus-libs-1.12.8-12.el8_4.2.x86_64</span><br><span class="line">libXext-1.3.4-1.el8.x86_64</span><br><span class="line">libXrender-0.9.10-7.el8.x86_64</span><br><span class="line">libxcb-1.13.1-1.el8.x86_64</span><br><span class="line">qt5-qtdeclarative-5.12.5-1.el8.x86_64</span><br><span class="line">qt5-qtwebchannel-5.12.5-1.el8.x86_64</span><br><span class="line">libicu-60.3-2.el8_1.x86_64</span><br><span class="line">qt5-qtlocation-5.12.5-1.el8.x86_64</span><br><span class="line">libXcomposite-0.4.4-14.el8.x86_64</span><br><span class="line">libicu-60.3-2.el8_1.x86_64</span><br><span class="line">qt5-qtsensors-5.12.5-1.el8.x86_64</span><br><span class="line">libjpeg-turbo-1.5.3-10.el8.x86_64</span><br><span class="line">libpng-1.6.34-5.el8.x86_64</span><br><span class="line">zlib-1.2.11-17.el8.x86_64</span><br><span class="line">libwebp-1.0.0-3.el8_4.x86_64</span><br><span class="line">hyphen-2.8.8-9.el8.x86_64</span><br><span class="line">libxml2-2.9.7-9.el8_4.2.x86_64</span><br><span class="line">libxslt-1.1.32-6.el8.x86_64</span><br><span class="line">sqlite-libs-3.26.0-13.el8.x86_64</span><br><span class="line">glib2-2.56.4-10.el8_4.1.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">gstreamer1-plugins-base-1.16.1-2.el8.x86_64</span><br><span class="line">glib2-2.56.4-10.el8_4.1.x86_64</span><br><span class="line">glib2-2.56.4-10.el8_4.1.x86_64</span><br><span class="line">qt5-qtdeclarative-5.12.5-1.el8.x86_64</span><br><span class="line">openssl-libs-1.1.1g-15.el8_3.x86_64</span><br><span class="line">openssl-libs-1.1.1g-15.el8_3.x86_64</span><br><span class="line">harfbuzz-1.7.5-3.el8.x86_64</span><br><span class="line">systemd-libs-239-45.el8_4.3.x86_64</span><br><span class="line">libicu-60.3-2.el8_1.x86_64</span><br><span class="line">pcre2-utf16-10.32-2.el8.x86_64</span><br><span class="line">glib2-2.56.4-10.el8_4.1.x86_64</span><br><span class="line">pulseaudio-libs-14.0-2.el8.x86_64</span><br><span class="line">alsa-lib-1.2.4-5.el8.x86_64</span><br><span class="line">systemd-libs-239-45.el8_4.3.x86_64</span><br><span class="line">libXfixes-5.0.3-7.el8.x86_64</span><br><span class="line">libXdamage-1.1.4-14.el8.x86_64</span><br><span class="line">libXinerama-1.1.4-1.el8.x86_64</span><br><span class="line">libglvnd-egl-1.3.2-1.el8.x86_64</span><br><span class="line">libgomp-8.4.1-1.el8.x86_64</span><br><span class="line">libglvnd-glx-1.3.2-1.el8.x86_64</span><br><span class="line">libglvnd-1.3.2-1.el8.x86_64</span><br><span class="line">libXau-1.0.9-3.el8.x86_64</span><br><span class="line">xz-libs-5.2.4-3.el8.x86_64</span><br><span class="line">libffi-3.1-22.el8.x86_64</span><br><span class="line">glib2-2.56.4-10.el8_4.1.x86_64</span><br><span class="line">gnutls-3.6.16-4.el8.x86_64</span><br><span class="line">pcre-8.42-4.el8.x86_64</span><br><span class="line">libselinux-2.9-5.el8.x86_64</span><br><span class="line">glibc-2.28-151.el8.x86_64</span><br><span class="line">libmount-2.32.1-27.el8.x86_64</span><br><span class="line">orc-0.4.28-3.el8.x86_64</span><br><span class="line">freetype-2.9.1-4.el8_3.1.x86_64</span><br><span class="line">graphite2-1.3.10-10.el8.x86_64</span><br><span class="line">lz4-libs-1.8.3-3.el8_4.x86_64</span><br><span class="line">libcap-2.26-4.el8.x86_64</span><br><span class="line">libgcrypt-1.8.5-4.el8.x86_64</span><br><span class="line">pulseaudio-libs-14.0-2.el8.x86_64</span><br><span class="line">libX11-xcb-1.6.8-4.el8.x86_64</span><br><span class="line">libICE-1.0.9-15.el8.x86_64</span><br><span class="line">libSM-1.2.3-1.el8.x86_64</span><br><span class="line">libXtst-1.2.3-7.el8.x86_64</span><br><span class="line">libsndfile-1.0.28-10.el8_4.1.x86_64</span><br><span class="line">libasyncns-0.8-14.el8.x86_64</span><br><span class="line">p11-kit-0.23.22-1.el8.x86_64</span><br><span class="line">libidn2-2.2.0-1.el8.x86_64</span><br><span class="line">libunistring-0.9.9-3.el8.x86_64</span><br><span class="line">libtasn1-4.13-3.el8.x86_64</span><br><span class="line">nettle-3.4.1-4.el8_3.x86_64</span><br><span class="line">nettle-3.4.1-4.el8_3.x86_64</span><br><span class="line">gmp-6.1.2-10.el8.x86_64</span><br><span class="line">pcre2-10.32-2.el8.x86_64</span><br><span class="line">libblkid-2.32.1-27.el8.x86_64</span><br><span class="line">libuuid-2.32.1-27.el8.x86_64</span><br><span class="line">bzip2-libs-1.0.6-26.el8.x86_64</span><br><span class="line">libgpg-error-1.31-1.el8.x86_64</span><br><span class="line">libXi-1.7.10-1.el8.x86_64</span><br><span class="line">gsm-1.0.17-5.el8.x86_64</span><br><span class="line">flac-libs-1.3.2-9.el8.x86_64</span><br><span class="line">libogg-1.3.2-10.el8.x86_64</span><br><span class="line">libvorbis-1.3.6-2.el8.x86_64</span><br><span class="line">libvorbis-1.3.6-2.el8.x86_64</span><br></pre></td></tr></table></figure>
+<h1 id="4-拆解文件"><a href="#4-拆解文件" class="headerlink" title="4 拆解文件"></a>4 拆解文件</h1><ul>
+<li>例子使用的路径 <code>/opt/wemeet/wemeet/</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># alien -r TencentMeeting_0300000000_2.8.0.1_x86_64.publish.deb</span><br><span class="line"># rpm2cpio wemeet-2.8.0.1-2.x86_64.rpm |cpio -ivmd</span><br></pre></td></tr></table></figure>
+<h1 id="5-将额外的依赖库-copy-到系统对应的路径"><a href="#5-将额外的依赖库-copy-到系统对应的路径" class="headerlink" title="5 将额外的依赖库 copy 到系统对应的路径"></a>5 将额外的依赖库 <code>copy</code> 到系统对应的路径</h1></li>
+<li>例子使用的路径 <code>/opt/wemeet/wemeet/</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cp lib&#x2F;libwemeet.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libwemeet_app_sdk.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libwemeet_framework_common.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libxnn.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libxnn_core.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libtquic.so &#x2F;lib64&#x2F;</span><br><span class="line">cp lib&#x2F;libxcast.so &#x2F;lib64&#x2F;</span><br></pre></td></tr></table></figure>
+<h1 id="6-检查确认库都齐全"><a href="#6-检查确认库都齐全" class="headerlink" title="6 检查确认库都齐全"></a>6 检查确认库都齐全</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"># ldd &#x2F;opt&#x2F;wemeet&#x2F;wemeet&#x2F;bin&#x2F;wemeetapp</span><br><span class="line">	linux-vdso.so.1 (0x00007ffcf6fd5000)</span><br><span class="line">	libwemeet.so &#x3D;&gt; &#x2F;lib64&#x2F;libwemeet.so (0x00007f00db997000)</span><br><span class="line">	libstdc++.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libstdc++.so.6 (0x00007f00db602000)</span><br><span class="line">	libm.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libm.so.6 (0x00007f00db280000)</span><br><span class="line">	libgcc_s.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libgcc_s.so.1 (0x00007f00db068000)</span><br><span class="line">	libc.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libc.so.6 (0x00007f00daca3000)</span><br><span class="line">	libwemeet_app_sdk.so &#x3D;&gt; &#x2F;lib64&#x2F;libwemeet_app_sdk.so (0x00007f00d9193000)</span><br><span class="line">	libQt5WebKitWidgets.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5WebKitWidgets.so.5 (0x00007f00dd54d000)</span><br><span class="line">	libQt5X11Extras.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5X11Extras.so.5 (0x00007f00dd547000)</span><br><span class="line">	libQt5DBus.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5DBus.so.5 (0x00007f00dd4ae000)</span><br><span class="line">	libXrandr.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libXrandr.so.2 (0x00007f00d8f88000)</span><br><span class="line">	libX11.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libX11.so.6 (0x00007f00d8c45000)</span><br><span class="line">	libwayland-egl.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libwayland-egl.so.1 (0x00007f00d8a43000)</span><br><span class="line">	libQt5Widgets.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Widgets.so.5 (0x00007f00d83c0000)</span><br><span class="line">	libQt5WebKit.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5WebKit.so.5 (0x00007f00d5654000)</span><br><span class="line">	libQt5Network.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Network.so.5 (0x00007f00d549b000)</span><br><span class="line">	libQt5Gui.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Gui.so.5 (0x00007f00d4f73000)</span><br><span class="line">	libQt5Core.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Core.so.5 (0x00007f00d4a5a000)</span><br><span class="line">	&#x2F;lib64&#x2F;ld-linux-x86-64.so.2 (0x00007f00dd394000)</span><br><span class="line">	libwemeet_framework_common.so &#x3D;&gt; &#x2F;lib64&#x2F;libwemeet_framework_common.so (0x00007f00d4844000)</span><br><span class="line">	libxcast.so &#x3D;&gt; &#x2F;lib64&#x2F;libxcast.so (0x00007f00d379e000)</span><br><span class="line">	libxnn.so &#x3D;&gt; &#x2F;lib64&#x2F;libxnn.so (0x00007f00d32b3000)</span><br><span class="line">	libxnn_core.so &#x3D;&gt; &#x2F;lib64&#x2F;libxnn_core.so (0x00007f00d20fb000)</span><br><span class="line">	libpthread.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libpthread.so.0 (0x00007f00d1edb000)</span><br><span class="line">	libdl.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libdl.so.2 (0x00007f00d1cd7000)</span><br><span class="line">	librt.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;librt.so.1 (0x00007f00d1acf000)</span><br><span class="line">	libtquic.so &#x3D;&gt; &#x2F;lib64&#x2F;libtquic.so (0x00007f00d17b2000)</span><br><span class="line">	libbsd.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libbsd.so.0 (0x00007f00d1599000)</span><br><span class="line">	libQt5PrintSupport.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5PrintSupport.so.5 (0x00007f00dd430000)</span><br><span class="line">	libGL.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libGL.so.1 (0x00007f00d1313000)</span><br><span class="line">	libdbus-1.so.3 &#x3D;&gt; &#x2F;lib64&#x2F;libdbus-1.so.3 (0x00007f00d10bf000)</span><br><span class="line">	libXext.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libXext.so.6 (0x00007f00d0eac000)</span><br><span class="line">	libXrender.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libXrender.so.1 (0x00007f00d0ca1000)</span><br><span class="line">	libxcb.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libxcb.so.1 (0x00007f00d0a78000)</span><br><span class="line">	libQt5Quick.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Quick.so.5 (0x00007f00d05af000)</span><br><span class="line">	libQt5WebChannel.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5WebChannel.so.5 (0x00007f00dd40c000)</span><br><span class="line">	libicuuc.so.60 &#x3D;&gt; &#x2F;lib64&#x2F;libicuuc.so.60 (0x00007f00d01ed000)</span><br><span class="line">	libQt5Positioning.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Positioning.so.5 (0x00007f00d0165000)</span><br><span class="line">	libXcomposite.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libXcomposite.so.1 (0x00007f00cff62000)</span><br><span class="line">	libicui18n.so.60 &#x3D;&gt; &#x2F;lib64&#x2F;libicui18n.so.60 (0x00007f00cfaa1000)</span><br><span class="line">	libQt5Sensors.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Sensors.so.5 (0x00007f00dd3c8000)</span><br><span class="line">	libjpeg.so.62 &#x3D;&gt; &#x2F;lib64&#x2F;libjpeg.so.62 (0x00007f00cf838000)</span><br><span class="line">	libpng16.so.16 &#x3D;&gt; &#x2F;lib64&#x2F;libpng16.so.16 (0x00007f00cf603000)</span><br><span class="line">	libz.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libz.so.1 (0x00007f00cf3ec000)</span><br><span class="line">	libwebp.so.7 &#x3D;&gt; &#x2F;lib64&#x2F;libwebp.so.7 (0x00007f00cf17e000)</span><br><span class="line">	libhyphen.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libhyphen.so.0 (0x00007f00cef78000)</span><br><span class="line">	libxml2.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libxml2.so.2 (0x00007f00cec10000)</span><br><span class="line">	libxslt.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libxslt.so.1 (0x00007f00ce9cf000)</span><br><span class="line">	libsqlite3.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libsqlite3.so.0 (0x00007f00ce6bb000)</span><br><span class="line">	libgio-2.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgio-2.0.so.0 (0x00007f00ce311000)</span><br><span class="line">	libgstapp-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstapp-1.0.so.0 (0x00007f00ce101000)</span><br><span class="line">	libgstbase-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstbase-1.0.so.0 (0x00007f00cde85000)</span><br><span class="line">	libgstreamer-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstreamer-1.0.so.0 (0x00007f00cdb41000)</span><br><span class="line">	libgstpbutils-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstpbutils-1.0.so.0 (0x00007f00cd904000)</span><br><span class="line">	libgstaudio-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstaudio-1.0.so.0 (0x00007f00cd689000)</span><br><span class="line">	libgsttag-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgsttag-1.0.so.0 (0x00007f00cd44c000)</span><br><span class="line">	libgstvideo-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstvideo-1.0.so.0 (0x00007f00cd19e000)</span><br><span class="line">	libgstfft-1.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgstfft-1.0.so.0 (0x00007f00ccf93000)</span><br><span class="line">	libgobject-2.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgobject-2.0.so.0 (0x00007f00ccd40000)</span><br><span class="line">	libglib-2.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libglib-2.0.so.0 (0x00007f00cca27000)</span><br><span class="line">	libQt5Qml.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;libQt5Qml.so.5 (0x00007f00cc562000)</span><br><span class="line">	libssl.so.1.1 &#x3D;&gt; &#x2F;lib64&#x2F;libssl.so.1.1 (0x00007f00cc2ce000)</span><br><span class="line">	libcrypto.so.1.1 &#x3D;&gt; &#x2F;lib64&#x2F;libcrypto.so.1.1 (0x00007f00cbde8000)</span><br><span class="line">	libharfbuzz.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libharfbuzz.so.0 (0x00007f00cbb42000)</span><br><span class="line">	libsystemd.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libsystemd.so.0 (0x00007f00cb7fb000)</span><br><span class="line">	libicudata.so.60 &#x3D;&gt; &#x2F;lib64&#x2F;libicudata.so.60 (0x00007f00c9c4f000)</span><br><span class="line">	libpcre2-16.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libpcre2-16.so.0 (0x00007f00c99d6000)</span><br><span class="line">	libgthread-2.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgthread-2.0.so.0 (0x00007f00c97d4000)</span><br><span class="line">	libpulse.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libpulse.so.0 (0x00007f00c957f000)</span><br><span class="line">	libasound.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libasound.so.2 (0x00007f00c927d000)</span><br><span class="line">	libudev.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libudev.so.1 (0x00007f00c8fe7000)</span><br><span class="line">	libXfixes.so.3 &#x3D;&gt; &#x2F;lib64&#x2F;libXfixes.so.3 (0x00007f00c8ddf000)</span><br><span class="line">	libXdamage.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libXdamage.so.1 (0x00007f00c8bdc000)</span><br><span class="line">	libXinerama.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libXinerama.so.1 (0x00007f00c89d9000)</span><br><span class="line">	libEGL.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libEGL.so.1 (0x00007f00c87c5000)</span><br><span class="line">	libgomp.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libgomp.so.1 (0x00007f00c858d000)</span><br><span class="line">	libGLX.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libGLX.so.0 (0x00007f00c8359000)</span><br><span class="line">	libGLdispatch.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libGLdispatch.so.0 (0x00007f00c80a3000)</span><br><span class="line">	libXau.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libXau.so.6 (0x00007f00c7e9f000)</span><br><span class="line">	liblzma.so.5 &#x3D;&gt; &#x2F;lib64&#x2F;liblzma.so.5 (0x00007f00c7c78000)</span><br><span class="line">	libffi.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libffi.so.6 (0x00007f00c7a6d000)</span><br><span class="line">	libgmodule-2.0.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgmodule-2.0.so.0 (0x00007f00c7869000)</span><br><span class="line">	libgnutls.so.30 &#x3D;&gt; &#x2F;lib64&#x2F;libgnutls.so.30 (0x00007f00c7478000)</span><br><span class="line">	libpcre.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libpcre.so.1 (0x00007f00c7207000)</span><br><span class="line">	libselinux.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libselinux.so.1 (0x00007f00c6fdd000)</span><br><span class="line">	libresolv.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libresolv.so.2 (0x00007f00c6dc6000)</span><br><span class="line">	libmount.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libmount.so.1 (0x00007f00c6b6a000)</span><br><span class="line">	liborc-0.4.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;liborc-0.4.so.0 (0x00007f00c68ec000)</span><br><span class="line">	libfreetype.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libfreetype.so.6 (0x00007f00c6630000)</span><br><span class="line">	libgraphite2.so.3 &#x3D;&gt; &#x2F;lib64&#x2F;libgraphite2.so.3 (0x00007f00c6404000)</span><br><span class="line">	liblz4.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;liblz4.so.1 (0x00007f00c61e5000)</span><br><span class="line">	libcap.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libcap.so.2 (0x00007f00c5fdf000)</span><br><span class="line">	libgcrypt.so.20 &#x3D;&gt; &#x2F;lib64&#x2F;libgcrypt.so.20 (0x00007f00c5cc1000)</span><br><span class="line">	libpulsecommon-14.0.so &#x3D;&gt; &#x2F;usr&#x2F;lib64&#x2F;pulseaudio&#x2F;libpulsecommon-14.0.so (0x00007f00c5a3a000)</span><br><span class="line">	libX11-xcb.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libX11-xcb.so.1 (0x00007f00c5838000)</span><br><span class="line">	libICE.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libICE.so.6 (0x00007f00c5619000)</span><br><span class="line">	libSM.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libSM.so.6 (0x00007f00c5410000)</span><br><span class="line">	libXtst.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libXtst.so.6 (0x00007f00c5209000)</span><br><span class="line">	libsndfile.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libsndfile.so.1 (0x00007f00c4f97000)</span><br><span class="line">	libasyncns.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libasyncns.so.0 (0x00007f00c4d91000)</span><br><span class="line">	libp11-kit.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libp11-kit.so.0 (0x00007f00c4a67000)</span><br><span class="line">	libidn2.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libidn2.so.0 (0x00007f00c4847000)</span><br><span class="line">	libunistring.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libunistring.so.2 (0x00007f00c44c6000)</span><br><span class="line">	libtasn1.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libtasn1.so.6 (0x00007f00c42b3000)</span><br><span class="line">	libnettle.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libnettle.so.6 (0x00007f00c4079000)</span><br><span class="line">	libhogweed.so.4 &#x3D;&gt; &#x2F;lib64&#x2F;libhogweed.so.4 (0x00007f00c3e48000)</span><br><span class="line">	libgmp.so.10 &#x3D;&gt; &#x2F;lib64&#x2F;libgmp.so.10 (0x00007f00c3bb0000)</span><br><span class="line">	libpcre2-8.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libpcre2-8.so.0 (0x00007f00c392a000)</span><br><span class="line">	libblkid.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libblkid.so.1 (0x00007f00c36d7000)</span><br><span class="line">	libuuid.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libuuid.so.1 (0x00007f00c34cf000)</span><br><span class="line">	libbz2.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libbz2.so.1 (0x00007f00c32be000)</span><br><span class="line">	libgpg-error.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libgpg-error.so.0 (0x00007f00c309d000)</span><br><span class="line">	libXi.so.6 &#x3D;&gt; &#x2F;lib64&#x2F;libXi.so.6 (0x00007f00c2e8a000)</span><br><span class="line">	libgsm.so.1 &#x3D;&gt; &#x2F;lib64&#x2F;libgsm.so.1 (0x00007f00c2c7e000)</span><br><span class="line">	libFLAC.so.8 &#x3D;&gt; &#x2F;lib64&#x2F;libFLAC.so.8 (0x00007f00c2a24000)</span><br><span class="line">	libogg.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libogg.so.0 (0x00007f00c281d000)</span><br><span class="line">	libvorbis.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libvorbis.so.0 (0x00007f00c25f0000)</span><br><span class="line">	libvorbisenc.so.2 &#x3D;&gt; &#x2F;lib64&#x2F;libvorbisenc.so.2 (0x00007f00c2347000)</span><br></pre></td></tr></table></figure>
+<h1 id="7-创建图标链接"><a href="#7-创建图标链接" class="headerlink" title="7 创建图标链接"></a>7 创建图标链接</h1></li>
+<li>创建文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#vim &#x2F;usr&#x2F;share&#x2F;applications&#x2F;wemeetapp.desktop</span><br></pre></td></tr></table></figure></li>
+<li>确保文件内容如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Name&#x3D;WemeetApp</span><br><span class="line">Exec&#x3D;&#x2F;opt&#x2F;wemeet&#x2F;wemeet&#x2F;bin&#x2F;wemeetapp  # 拆解的 wemeetapp 路径 (也可以根据你实际情况修改)</span><br><span class="line">Icon&#x3D;&#x2F;opt&#x2F;wemeet&#x2F;wemeet&#x2F;splash_logo3x.png # 拆解的图标路径</span><br><span class="line">Type&#x3D;Application</span><br><span class="line">Terminal&#x3D;false</span><br><span class="line">Categories&#x3D;AudioVideo;</span><br><span class="line">MimeType&#x3D;x-scheme-handler&#x2F;wemeet;</span><br></pre></td></tr></table></figure>
+<h1 id="8-启动wemeetapp-通过快捷方式或者点击图标-以点击图标为例"><a href="#8-启动wemeetapp-通过快捷方式或者点击图标-以点击图标为例" class="headerlink" title="8 启动wemeetapp, 通过快捷方式或者点击图标(以点击图标为例)"></a>8 启动wemeetapp, 通过快捷方式或者点击图标(以点击图标为例)</h1></li>
+<li>点击图标快速启动<br><img src="/images/wemeet1.png" alt="wemeet1"></li>
+<li>扫码或者自己习惯的方式登陆<br><img src="/images/wemeet2.png" alt="wemeet2"></li>
+<li>可以执行共享屏幕等会议应用<br><img src="/images/wemeet3.png" alt="wemeet3"></li>
+<li>结束退出会议<br><img src="/images/wemeet4.png" alt="wemeet4"></li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.ackdo.com/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/" title="在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用" target="_blank" rel="external">http://www.ackdo.com/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">AckDo by Sam Lee</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/06/linux_ackdo_RHEL8_DNS_config/" title="在 Red Hat Enterprise Linux 8 搭建 DNS 服务器"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+    <!--- <div class="container" align="left">
+    <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+      <img src="/images/wechatp.png" itemprop="contentUrl">
+      <span>欢迎关注公众号</span>
+    </div>
+    </div> --->
+</nav>
+
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>您能有收获就是我们最大的动力</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码捐赠</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">不管多少都是对分享的肯定</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码捐赠</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://google.com/" target="_blank" title="Google" data-toggle=tooltip data-placement=top><i class="icon icon-google"></i></a></li>
+        
+        <li><a href="https://twitter.com/" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+	<a target="_blank" rel="noopener" href="https://beian.miit.gov.cn" text-align: center >粤ICP备2021024811号</a>
+        </div>
+<!--    
+    <div>
+     <img src="/images/logo.png" width="140" height="140">
+    </div>
+-->
+    </div>
+
+
+        <!-- 不蒜子统计    //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js -->
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <!--<span id="busuanzi_container_site_pv" style="display:inline;">-->本站总访问量<span id="busuanzi_value_site_pv" style="display:inline;></span>次</span>
+        <span class="post-meta-divider">|</span>
+  
+</footer>
+
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
