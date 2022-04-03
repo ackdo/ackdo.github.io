@@ -17,20 +17,23 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc | AckDo.com</title>
-  <meta name="description" content="Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc 1. 环境 Red Hat Enterprise Linux release 8.2 (Ootpa) 4.18.0-193.el8.x86_64 tigervnc-server-1.10.1-9.el8_3.x86_642. 安装需要的 VNC 组件1# yum install -y tigervnc tige">
+  <title>Red Hat Enterprise Linux 8 的小技巧 创建一个 GNOME shell extensions | AckDo.com</title>
+  <meta name="description" content="1 背景 在我们使用 GNOME 桌面的时候, 有时想要知道我们当前的 IP 地址, 但通常又不能很直观的看到. 通过这个 extension , 我们就可以非常方便知道我们当前的 IP (默认路由上对应网口的IP)地址了.  这个 entension 会以 10 秒钟为间隔, 自动的刷新, 避免IP 更新后不能及时同步.2 环境 Red Hat Enterprise Linux release">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc">
-<meta property="og:url" content="http://www.ackdo.com/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/index.html">
+<meta property="og:title" content="Red Hat Enterprise Linux 8 的小技巧 创建一个 GNOME shell extensions">
+<meta property="og:url" content="http://www.ackdo.com/2022/04/03/linux_ackdo_RHEL8_gnome-extension/index.html">
 <meta property="og:site_name" content="AckDo">
-<meta property="og:description" content="Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc 1. 环境 Red Hat Enterprise Linux release 8.2 (Ootpa) 4.18.0-193.el8.x86_64 tigervnc-server-1.10.1-9.el8_3.x86_642. 安装需要的 VNC 组件1# yum install -y tigervnc tige">
+<meta property="og:description" content="1 背景 在我们使用 GNOME 桌面的时候, 有时想要知道我们当前的 IP 地址, 但通常又不能很直观的看到. 通过这个 extension , 我们就可以非常方便知道我们当前的 IP (默认路由上对应网口的IP)地址了.  这个 entension 会以 10 秒钟为间隔, 自动的刷新, 避免IP 更新后不能及时同步.2 环境 Red Hat Enterprise Linux release">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-02-18T16:00:00.000Z">
+<meta property="og:image" content="http://www.ackdo.com/images/gnome-extension1.png">
+<meta property="og:image" content="http://www.ackdo.com/images/gnome-extension2.png">
+<meta property="article:published_time" content="2022-04-02T17:00:00.000Z">
+<meta property="article:modified_time" content="2022-04-02T16:00:00.000Z">
 <meta property="article:author" content="Sam Lee">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.ackdo.com/images/gnome-extension1.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://www.ackdo.com/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/index.html">
+  <link rel="canonical" href="http://www.ackdo.com/2022/04/03/linux_ackdo_RHEL8_gnome-extension/index.html">
   
     <link rel="alternate" href="/atom.xml" title="AckDo" type="application/atom+xml">
   
@@ -293,21 +296,21 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Red-Hat-Enterprise-Linux-8-%E7%9A%84%E6%96%B0%E7%8E%A9%E6%84%8F-%E7%AC%AC5%E7%AF%87tigervnc"><span class="toc-number">1.</span> <span class="toc-text">Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.</span> <span class="toc-text">1. 环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E9%9C%80%E8%A6%81%E7%9A%84-VNC-%E7%BB%84%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">2. 安装需要的 VNC 组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AEvncserver%E8%AE%BF%E9%97%AE%E7%9A%84password"><span class="toc-number">1.3.</span> <span class="toc-text">3. 配置vncserver访问的password</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA%E9%9C%80%E8%A6%81%E7%9A%84systemd%E6%96%87%E4%BB%B6-%EF%BC%88%E4%BD%BF%E7%94%A8tigervnc-server%E8%87%AA%E5%B8%A6%E7%9A%84%E4%BE%8B%E5%AD%90%E6%96%87%E4%BB%B6%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BA%86%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">4. 创建需要的systemd文件 （使用tigervnc-server自带的例子文件就可以了）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%B7%BB%E5%8A%A0%E9%9C%80%E8%A6%81%E8%AE%BF%E9%97%AE%E7%9A%84%E7%94%A8%E6%88%B7"><span class="toc-number">1.5.</span> <span class="toc-text">5. 添加需要访问的用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BDdaemon%E7%84%B6%E5%90%8E%E5%90%AF%E5%8A%A8vncserver-%EF%BC%88%E5%8F%AF%E4%BB%A5%E9%85%8D%E7%BD%AEenable%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">6. 重新加载daemon然后启动vncserver （可以配置enable）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-1%EF%BC%9A-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-usr-lib-systemd-system-vncserver-1-service"><span class="toc-number">1.7.</span> <span class="toc-text">附录 1： 配置文件 &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;vncserver@\:1.service</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-2%EF%BC%9A-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-etc-tigervnc-vncserver-users"><span class="toc-number">1.8.</span> <span class="toc-text">附录 2： 配置文件 &#x2F;etc&#x2F;tigervnc&#x2F;vncserver.users</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-3%EF%BC%9A-%E5%8F%AF%E8%83%BD%E4%BC%9A%E7%A2%B0%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-number">1.9.</span> <span class="toc-text">附录 3： 可能会碰到的错误</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">1 背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">2 环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-GNOME-shell-extensions-%E7%AE%80%E4%BB%8B"><span class="toc-number">3.</span> <span class="toc-text">3 GNOME shell extensions 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA%E6%98%BE%E7%A4%BA-IP-%E7%9A%84-GNOME-shell-extension"><span class="toc-number">4.</span> <span class="toc-text">4 创建显示 IP 的 GNOME shell extension</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E8%BF%9B%E5%85%A5%E7%9B%AE%E5%BD%95-%E5%88%9B%E5%BB%BAextension-%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9-%E7%AE%80%E5%8D%95%E8%B5%B7%E8%A7%81-%E5%B0%B1%E5%8F%AB-sam-show-ip-ackdo-com-%E4%BA%86"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 进入目录, 创建extension 的文件夹, 简单起见, 就叫 sam_show_ip@ackdo.com 了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%88%9B%E5%BB%BA-extension-%E5%BF%85%E9%A1%BB%E7%9A%84-2-%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 创建 extension 必须的 2 个文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8%E6%88%91%E4%BB%AC%E7%9A%84-Sam-show-ip-GNOME-shell-extension"><span class="toc-number">5.</span> <span class="toc-text">5 启动我们的 Sam show ip GNOME shell extension</span></a></li></ol>
     </nav>
   </div>
 </aside>
 
 <main class="main" role="main">
   <div class="content">
-  <article id="post-linux_ackdo_configure_tigervnc_on_rhel82" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-linux_ackdo_RHEL8_gnome-extension" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc
+      Red Hat Enterprise Linux 8 的小技巧 创建一个 GNOME shell extensions
     </h1>
   
 
@@ -315,14 +318,14 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/" class="article-date">
-	 published: <time datetime="2021-02-18T16:00:00.000Z" itemprop="datePublished">2021-02-19</time>
+	<a href="/2022/04/03/linux_ackdo_RHEL8_gnome-extension/" class="article-date">
+	 published: <time datetime="2022-04-02T17:00:00.000Z" itemprop="datePublished">2022-04-03</time>
 	</a>
 </span>
 
         
-	<a href="/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/" class="article-date">
-	   updated: <time datetime="2021-02-18T16:00:00.000Z" itemprop="dateUpdated">2021-02-19</time>
+	<a href="/2022/04/03/linux_ackdo_RHEL8_gnome-extension/" class="article-date">
+	   updated: <time datetime="2022-04-02T16:00:00.000Z" itemprop="dateUpdated">2022-04-03</time>
 	</a>
 
 
@@ -344,7 +347,7 @@
 
 
 
-        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/#comments" class="article-comment-link">评论</a></span> -->
+        <!--<span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/04/03/linux_ackdo_RHEL8_gnome-extension/#comments" class="article-comment-link">评论</a></span> -->
         
 	
 	
@@ -353,20 +356,40 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="Red-Hat-Enterprise-Linux-8-的新玩意-第5篇tigervnc"><a href="#Red-Hat-Enterprise-Linux-8-的新玩意-第5篇tigervnc" class="headerlink" title="Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc"></a>Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc</h1><p><br></br></p>
-<h2 id="1-环境"><a href="#1-环境" class="headerlink" title="1. 环境"></a>1. 环境</h2><ul>
-<li>Red Hat Enterprise Linux release 8.2 (Ootpa)</li>
-<li>4.18.0-193.el8.x86_64</li>
-<li>tigervnc-server-1.10.1-9.el8_3.x86_64<br><br></br><h2 id="2-安装需要的-VNC-组件"><a href="#2-安装需要的-VNC-组件" class="headerlink" title="2. 安装需要的 VNC 组件"></a>2. 安装需要的 VNC 组件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y tigervnc tigervnc-server</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="3-配置vncserver访问的password"><a href="#3-配置vncserver访问的password" class="headerlink" title="3. 配置vncserver访问的password"></a>3. 配置vncserver访问的password</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vncpasswd</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="4-创建需要的systemd文件-（使用tigervnc-server自带的例子文件就可以了）"><a href="#4-创建需要的systemd文件-（使用tigervnc-server自带的例子文件就可以了）" class="headerlink" title="4. 创建需要的systemd文件 （使用tigervnc-server自带的例子文件就可以了）"></a>4. 创建需要的systemd文件 （使用tigervnc-server自带的例子文件就可以了）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;vncserver@.service &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;vncserver@\:1.service</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="5-添加需要访问的用户"><a href="#5-添加需要访问的用户" class="headerlink" title="5. 添加需要访问的用户"></a>5. 添加需要访问的用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;:1&#x3D;root&quot; &gt;&gt; &#x2F;etc&#x2F;tigervnc&#x2F;vncserver.users</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="6-重新加载daemon然后启动vncserver-（可以配置enable）"><a href="#6-重新加载daemon然后启动vncserver-（可以配置enable）" class="headerlink" title="6. 重新加载daemon然后启动vncserver （可以配置enable）"></a>6. 重新加载daemon然后启动vncserver （可以配置enable）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># systemctl daemon-reload</span><br><span class="line"># systemctl start vncserver@\:1.service</span><br><span class="line"># 可选</span><br><span class="line"># systemctl enable vncserver@\:1.service</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="附录-1：-配置文件-usr-lib-systemd-system-vncserver-1-service"><a href="#附录-1：-配置文件-usr-lib-systemd-system-vncserver-1-service" class="headerlink" title="附录 1： 配置文件 /usr/lib/systemd/system/vncserver@\:1.service"></a>附录 1： 配置文件 <code>/usr/lib/systemd/system/vncserver@\:1.service</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># egrep -v &quot;^#|^$&quot; -r &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;vncserver@\:1.service</span><br><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Remote desktop service (VNC)</span><br><span class="line">After&#x3D;syslog.target network.target</span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;forking</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;libexec&#x2F;vncsession-start %i</span><br><span class="line">PIDFile&#x3D;&#x2F;var&#x2F;run&#x2F;vncsession-%i.pid</span><br><span class="line">SELinuxContext&#x3D;system_u:system_r:vnc_session_t:s0</span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="附录-2：-配置文件-etc-tigervnc-vncserver-users"><a href="#附录-2：-配置文件-etc-tigervnc-vncserver-users" class="headerlink" title="附录 2： 配置文件 /etc/tigervnc/vncserver.users"></a>附录 2： 配置文件 <code>/etc/tigervnc/vncserver.users</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TigerVNC User assignment</span><br><span class="line">#</span><br><span class="line"># This file assigns users to specific VNC display numbers.</span><br><span class="line"># The syntax is &lt;display&gt;&#x3D;&lt;username&gt;. E.g.:</span><br><span class="line">#</span><br><span class="line"># :2&#x3D;andrew</span><br><span class="line"># :3&#x3D;lisa</span><br><span class="line">:1&#x3D;root</span><br></pre></td></tr></table></figure>
-<br></br><h2 id="附录-3：-可能会碰到的错误"><a href="#附录-3：-可能会碰到的错误" class="headerlink" title="附录 3： 可能会碰到的错误"></a>附录 3： 可能会碰到的错误</h2></li>
-<li>使用了错误的vncserver@:1.service 文件 （因为cp了原来 RHEL7 的配置文件， 使用tigervnc-server自带的例子文件就可以了）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># systemctl status  vncserver@\:1.service</span><br><span class="line">● vncserver@:1.service - Remote desktop service (VNC)</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;vncserver@:1.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: failed (Result: protocol) since Fri 2021-02-19 17:00:12 CST; 5s ago</span><br><span class="line">  Process: 34992 ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;runuser -l root -c &#x2F;usr&#x2F;bin&#x2F;vncserver :1 (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">  Process: 34990 ExecStartPre&#x3D;&#x2F;bin&#x2F;sh -c &#x2F;usr&#x2F;bin&#x2F;vncserver -kill :1 &gt; &#x2F;dev&#x2F;null 2&gt;&amp;1 || : (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line"></span><br><span class="line">Feb 19 17:00:12 rhel82 systemd[1]: Starting Remote desktop service (VNC)...</span><br><span class="line">Feb 19 17:00:12 rhel82 systemd[1]: vncserver@:1.service: Can&#39;t open PID file &#x2F;root&#x2F;.vnc&#x2F;rhel82:1.pid (yet?) after start: No such file or di&gt;</span><br><span class="line">Feb 19 17:00:12 rhel82 systemd[1]: vncserver@:1.service: Failed with result &#39;protocol&#39;.</span><br><span class="line">Feb 19 17:00:12 rhel82 systemd[1]: Failed to start Remote desktop service (VNC).</span><br></pre></td></tr></table></figure></li>
-<li>没有添加vnc用户到 <code>/etc/tigervnc/vncserver.users</code> （增加对应的用户就可以了）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># systemctl status vncserver@\:1.service -l</span><br><span class="line">● vncserver@:1.service - Remote desktop service (VNC)</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;vncserver@:1.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: failed (Result: exit-code) since Fri 2021-02-19 17:09:37 CST; 3s ago</span><br><span class="line">  Process: 35662 ExecStart&#x3D;&#x2F;usr&#x2F;libexec&#x2F;vncsession-start :1 (code&#x3D;exited, status&#x3D;1&#x2F;FAILURE)</span><br><span class="line"></span><br><span class="line">Feb 19 17:09:37 rhel82 systemd[1]: Starting Remote desktop service (VNC)...</span><br><span class="line">Feb 19 17:09:37 rhel82 vncsession-start[35662]: No user configured for display :1</span><br><span class="line">Feb 19 17:09:37 rhel82 systemd[1]: vncserver@:1.service: Control process exited, code&#x3D;exited status&#x3D;1</span><br><span class="line">Feb 19 17:09:37 rhel82 systemd[1]: vncserver@:1.service: Failed with result &#39;exit-code&#39;.</span><br><span class="line">Feb 19 17:09:37 rhel82 systemd[1]: Failed to start Remote desktop service (VNC).</span><br></pre></td></tr></table></figure></li>
+        <p><br></br></p>
+<h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h1><ul>
+<li>在我们使用 GNOME 桌面的时候, 有时想要知道我们当前的 IP 地址, 但通常又不能很直观的看到. 通过这个 extension , 我们就可以非常方便知道我们当前的 IP (默认路由上对应网口的IP)地址了.  这个 entension 会以 10 秒钟为间隔, 自动的刷新, 避免IP 更新后不能及时同步.<br><br></br><h1 id="2-环境"><a href="#2-环境" class="headerlink" title="2 环境"></a>2 环境</h1></li>
+<li>Red Hat Enterprise Linux release 8.5 (Ootpa)</li>
+<li>gnome-shell-3.32.2-40.el8.x86_64</li>
+<li>gnome-tweaks-3.28.1-7.el8.noarch<br><br></br><h1 id="3-GNOME-shell-extensions-简介"><a href="#3-GNOME-shell-extensions-简介" class="headerlink" title="3 GNOME shell extensions 简介"></a>3 GNOME shell extensions 简介</h1></li>
+<li>GNOME shell extensions 设计旨在为 GNOME GUI 部分提供更强大的功能扩展，例如窗口管理, 应用程序启动, 显示定制化的信息等等。它通过加载 JavaScript 和 CSS 而无需修改或重新编译源代码就可以实现GNOME 功能的动态扩展. extensions 使用基于GNOME特定的 JavaScript 开发.</li>
+<li>GNOME shell extensions 会存在于两个路径<ul>
+<li>当前用户的路径 <code>~/.local/share/gnome-shell/extensions/</code></li>
+<li>全局系统路径 <code>/usr/share/gnome-shell/extensions/</code></li>
+</ul>
+</li>
+<li>GNOME shell extensions 必须的两个文件<ul>
+<li><code>metadata.json</code> 里面包含了 extension 的基本信息, 例如 名字, 描述, 版本, UUID 等</li>
+<li><code>extension.js</code> 是 extension 中的关键部分, 实现了  extension 全部工作, 里面包含3个最基本的组成函数<ul>
+<li><code>init()</code> 引导初始化时执行的函数;</li>
+<li><code>enable()</code> extension 被调用执行;</li>
+<li><code>disable()</code> extension 被调用执行.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>我们可以通过命令查看运行状态 GNOME shell 的运行状态<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># journalctl -f -o cat &#x2F;usr&#x2F;bin&#x2F;gnome-shell</span><br></pre></td></tr></table></figure>
+<br></br><h1 id="4-创建显示-IP-的-GNOME-shell-extension"><a href="#4-创建显示-IP-的-GNOME-shell-extension" class="headerlink" title="4 创建显示 IP 的 GNOME shell extension"></a>4 创建显示 IP 的 GNOME shell extension</h1><h2 id="4-1-进入目录-创建extension-的文件夹-简单起见-就叫-sam-show-ip-ackdo-com-了"><a href="#4-1-进入目录-创建extension-的文件夹-简单起见-就叫-sam-show-ip-ackdo-com-了" class="headerlink" title="4.1 进入目录, 创建extension 的文件夹, 简单起见, 就叫 sam_show_ip@ackdo.com 了"></a>4.1 进入目录, 创建extension 的文件夹, 简单起见, 就叫 <code>sam_show_ip@ackdo.com</code> 了</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># cd &#x2F;usr&#x2F;share&#x2F;gnome-shell&#x2F;extensions&#x2F;</span><br><span class="line"># mkdir sam_show_ip@ackdo.com</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-创建-extension-必须的-2-个文件"><a href="#4-2-创建-extension-必须的-2-个文件" class="headerlink" title="4.2 创建 extension 必须的 2 个文件"></a>4.2 创建 extension 必须的 2 个文件</h2></li>
+<li>创建文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># touch extension.js metadata.json</span><br></pre></td></tr></table></figure></li>
+<li>编辑文件<ul>
+<li>编辑 `metadata.json‵<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;name&quot;: &quot;Sam show ip&quot;,</span><br><span class="line">&quot;description&quot;: &quot;This extension can be used to show the ipaddress&quot;,</span><br><span class="line">&quot;uuid&quot;: &quot;sam_show_ip@ackdo.com&quot;,</span><br><span class="line">&quot;shell-version&quot;: [&quot;3.32.2&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>编辑 <code>extension.js</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">const St &#x3D; imports.gi.St;</span><br><span class="line">const Main &#x3D; imports.ui.main;</span><br><span class="line">const Mainloop &#x3D; imports.mainloop;</span><br><span class="line">const GLib &#x3D; imports.gi.GLib;</span><br><span class="line">const ShellToolkit &#x3D; imports.gi.St;</span><br><span class="line">let reflashTime, text, button;</span><br><span class="line"></span><br><span class="line">function GetIP() &#123;</span><br><span class="line">    var cmd_ret &#x3D; GLib.spawn_command_line_sync(&#39;ip route get 1.2.4.8&#39;)[1];</span><br><span class="line">    var out_str &#x3D; &#39;&#39;;</span><br><span class="line">    var IpAddr;</span><br><span class="line"></span><br><span class="line">    for (var index &#x3D; 0; index &lt; cmd_ret.length; ++index)&#123;</span><br><span class="line">        var cur_char &#x3D; String.fromCharCode(cmd_ret[index]);</span><br><span class="line">        out_str +&#x3D; cur_char;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    var Re &#x3D; new RegExp(&#x2F;src [^ ]+&#x2F;g);</span><br><span class="line">    var matches &#x3D; out_str.match(Re);</span><br><span class="line">    if (matches) &#123;</span><br><span class="line">        IpAddr &#x3D; matches[0].split(&#39; &#39;)[1];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        IpAddr &#x3D; &#39;&#39;;</span><br><span class="line">    &#125;</span><br><span class="line">    text.set_text(IpAddr);</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function init() &#123;</span><br><span class="line">		button &#x3D; new St.Bin(&#123;</span><br><span class="line">		style_class: &#39;panel-button&#39;,</span><br><span class="line">		reactive: true,</span><br><span class="line">		can_focus: true,</span><br><span class="line">		x_fill: true,</span><br><span class="line">		y_fill: false,</span><br><span class="line">		track_hover: true</span><br><span class="line">	&#125;);</span><br><span class="line">	text &#x3D; new St.Label(&#123;text: &quot;ip searching...&quot;&#125;);</span><br><span class="line">	button.set_child(text);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function enable() &#123;</span><br><span class="line">	Main.panel._rightBox.insert_child_at_index(button, 0);</span><br><span class="line">	reflashTime &#x3D; Mainloop.timeout_add_seconds(10.0,GetIP); &#x2F;&#x2F; execute with 10 seconds interval</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function disable() &#123;</span><br><span class="line">	Main.panel._rightBox.remove_child(button);</span><br><span class="line">	Mainloop.source_remove(reflashTime);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br></br><h1 id="5-启动我们的-Sam-show-ip-GNOME-shell-extension"><a href="#5-启动我们的-Sam-show-ip-GNOME-shell-extension" class="headerlink" title="5 启动我们的 Sam show ip GNOME shell extension"></a>5 启动我们的 <code>Sam show ip</code> GNOME shell extension</h1></li>
+<li>启动 <code>gnome-tweaks</code> 然后 enable extension<br><img src="/images/gnome-extension1.png" alt="setup_pycharm_createExternal1.png"></li>
+<li>过 10 秒钟之后, ip 会自动同步<br><img src="/images/gnome-extension2.png" alt="setup_pycharm_createExternal1.png"></li>
+</ul>
+</li>
 </ul>
 
       
@@ -377,7 +400,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://www.ackdo.com/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/" title="Red Hat Enterprise Linux 8 的新玩意 第5篇tigervnc" target="_blank" rel="external">http://www.ackdo.com/2021/02/19/linux_ackdo_configure_tigervnc_on_rhel82/</a>
+      <a href="http://www.ackdo.com/2022/04/03/linux_ackdo_RHEL8_gnome-extension/" title="Red Hat Enterprise Linux 8 的小技巧 创建一个 GNOME shell extensions" target="_blank" rel="external">http://www.ackdo.com/2022/04/03/linux_ackdo_RHEL8_gnome-extension/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -417,13 +440,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2021/02/19/cloud_ackdo_container_etherpad/" title="基于 UBI 容器化 Etherpad 并且运行在RHEL8上"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2021/02/19/linux_ackdo_kpatch_install/" title="手动安装 kpatch 编译环境"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2021/11/13/linux_ackdo_use_wemeet_in_RHEL84%20/" title="在 Red Hat Enterprise Linux 8.4 上安装配置 腾讯会议 应用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
